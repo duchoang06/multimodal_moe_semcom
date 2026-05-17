@@ -1,0 +1,8 @@
+nohup: ignoring input
+
+===== Epoch 1/10 =====
+[train] step 0 task=img_cls loss = 8.9199 loss_task = 2.3690 aux_loss = {'attn_mi': -1.108395935034423e-07, 'attn_lb': 0.04026932269334793, 'ffn_text': 614.82421875}
+We strongly recommend passing in an `attention_mask` since your input_ids may be padded. See https://huggingface.co/docs/transformers/troubleshooting#incorrect-output-when-padding-tokens-arent-masked.
+[train] step 100 task=txt_rec loss = 13.1122 loss_task = 7.6595 aux_loss = {'attn_mi': 6.101272020941906e-08, 'attn_lb': 0.01355366688221693, 'ffn_vision': 531.7149658203125}
+[train] step 200 task=vqa loss = 6.0133 loss_task = 4.8118 aux_loss = {'attn_mi': -0.9416950941085815, 'attn_lb': 0.00945750530809164, 'ffn_text': 527.609375, 'ffn_vision': 524.7720947265625}
+[train] step 300 task=txt_cls loss = 5.9227 loss_task = 0.7001 aux_loss = {'attn_mi': -8.121603656263687e-08, 'attn_lb': 0.0011297722812741995, 'ffn_vision': 521.1280517578125}
