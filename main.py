@@ -5,7 +5,7 @@ import datetime
 import itertools
 from typing import Dict, Optional, Tuple, List
 
-import math
+import math, os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -23,12 +23,12 @@ from torch.utils.data import DataLoader
 from train_test_utils import train_step, eval_epoch
 
 if __name__ == "__main__":
-    rand_seed = 2026
+    rand_seed = 2027
     fix_seed(rand_seed)
 
     cfg = ModelConfig(
         d_model=768,
-        n_layers=4,
+        n_layers=12,
         n_tasks=5,
         max_seq_len=512,
 
@@ -136,7 +136,9 @@ if __name__ == "__main__":
     batcher = StepBasedMultiTaskBatcher(train_loaders)
 
     log_every = 100
-    eval_every = 10 
+    eval_every = 1
+    start_time = datetime.datetime.now()
+
     for epoch in range(num_epochs):
         print(f"\n===== Epoch {epoch+1}/{num_epochs} =====")
 
@@ -146,8 +148,8 @@ if __name__ == "__main__":
             task_name, batch = batcher.next()
             input_batch = batch_to_inputs(batch)
 
-            if task_name == 'vqa':
-                print('test vqa:')
+            # if task_name == 'vqa':
+            #     print('test vqa:')
 
             input_batch = {
                 k: v.to(device) if torch.is_tensor(v) else v for k, v in input_batch.items()
@@ -162,6 +164,12 @@ if __name__ == "__main__":
                     f"loss_task={stats['loss_task']:.4f} "
                     f"aux_loss={stats['aux_loss']}"
                 )
+        
+        elapsed = datetime.datetime.now() - start_time
+        hours, remainder = divmod(int(elapsed.total_seconds()), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        print(f"Elapsed: {hours}h {minutes}m {seconds}s")
+
         
         if (epoch + 1) % eval_every == 0:
             eval_results = eval_epoch(model, test_loaders, cfg, device, max_batches=None, eval_steps=run_cfg.eval_steps)
@@ -179,9 +187,11 @@ if __name__ == "__main__":
 
         
     # save the final model
+    os.makedirs("./checkpoints", exist_ok=True)
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     torch.save(model.state_dict(), f"./checkpoints/final_model_{timestamp}.pth")
 
 
-# nohup python -u main.py > ./log/main_nomi_loss_$(date +%Y%m%d_%H%M%S).log 2>&1 & 
+# nohup python -u main.py > ./log/main_batch64_$(date +%Y%m%d_%H%M%S).log 2>&1 & 
+
 

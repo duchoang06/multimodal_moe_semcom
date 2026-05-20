@@ -1,0 +1,10 @@
+nltk
+numpy
+transformers
+datasets
+scipy
+scikit-learn
+pillow
+matplotlib
+ninja
+packaging

@@ -673,7 +673,7 @@ class MToE(nn.Module):
         Assumes the batch belongs to a single task (T_k), effectively giving I(M; E | T_k).
         """
         B, T, E = probs.shape
-        num_modalities = 3 # 0: text, 1: vision, 2: speech
+        num_modalities = self.cfg.n_modalities # 0: text, 1: vision, 2: speech
         
         # 1. Compute Joint Probability P(M_i, E_j)
         joint_probs = torch.zeros(num_modalities, E, device=probs.device)

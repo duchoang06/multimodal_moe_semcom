@@ -28,7 +28,7 @@ class RunConfig:
 class ModelConfig:
     d_model: int = 512
     n_layers: int = 4
-    n_modalities = 3
+    n_modalities = 2
 
     # image size
     img_size: int = 224

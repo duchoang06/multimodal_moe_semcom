@@ -104,7 +104,7 @@ def train_step(
         labels = batch["labels"].to(device)
         loss_task = F.cross_entropy(logits, labels)
 
-        print('aux loss vqa:', aux_loss)
+        # print('aux loss vqa:', aux_loss)
 
     else:
         raise ValueError(f"Unexpected task_name {task_name} in training step.")
