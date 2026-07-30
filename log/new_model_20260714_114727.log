@@ -1,0 +1,164 @@
+nohup: ignoring input
+Process ID: 3404630
+Loading weights:   0%|          | 0/200 [00:00<?, ?it/s]Loading weights: 100%|██████████| 200/200 [00:00<00:00, 16675.50it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 19008.14it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Trainable parameters: 434,922,887
+
+===== Epoch 1/30 =====
+[train] step 0 task=vqa loss=44.9395 loss_task=8.1520 aux_loss={'attn_lb': 2.9106078147888184, 'ffn_compute': 4.783324718475342, 'ffn_align': 0.18405106663703918, 'ffn_mod_lb': 4.783324718475342}
+[train] step 100 task=txt_rec loss=17.1991 loss_task=10.2222 aux_loss={'attn_lb': 2.2998907566070557, 'ffn_compute': 1.959848165512085, 'ffn_align': 0.07573059946298599, 'ffn_mod_lb': 1.959848165512085}
+[train] step 200 task=img_rec loss=4.7075 loss_task=0.4616 aux_loss={'attn_lb': 2.036254644393921, 'ffn_compute': 1.095845341682434, 'ffn_align': 0.0017899724189192057, 'ffn_mod_lb': 1.095845341682434}
+[train] step 300 task=vqa loss=21.7852 loss_task=4.8329 aux_loss={'attn_lb': 2.008122205734253, 'ffn_compute': 2.0253162384033203, 'ffn_align': 9.149363177129999e-05, 'ffn_mod_lb': 2.0253162384033203}
+[train] step 400 task=vqa loss=23.3664 loss_task=5.6116 aux_loss={'attn_lb': 2.00974702835083, 'ffn_compute': 2.0307188034057617, 'ffn_align': 4.295109465601854e-05, 'ffn_mod_lb': 2.0307188034057617}
+[train] step 500 task=vqa loss=22.4006 loss_task=5.1274 aux_loss={'attn_lb': 2.0195162296295166, 'ffn_compute': 2.026568651199341, 'ffn_align': 2.7688462068908848e-05, 'ffn_mod_lb': 2.026568651199341}
+[train] step 600 task=txt_cls loss=4.7702 loss_task=0.6520 aux_loss={'attn_lb': 2.034621477127075, 'ffn_compute': 1.041774034500122, 'ffn_align': 1.5675000213377643e-06, 'ffn_mod_lb': 1.041774034500122}
+[train] step 700 task=vqa loss=23.5849 loss_task=5.5433 aux_loss={'attn_lb': 2.0351686477661133, 'ffn_compute': 2.106781482696533, 'ffn_align': 4.216293746139854e-05, 'ffn_mod_lb': 2.106781482696533}
+[train] step 800 task=txt_rec loss=10.9355 loss_task=6.5948 aux_loss={'attn_lb': 2.065459728240967, 'ffn_compute': 1.1312564611434937, 'ffn_align': 0.0012709647417068481, 'ffn_mod_lb': 1.1312564611434937}
+[train] step 900 task=img_rec loss=4.3166 loss_task=0.2452 aux_loss={'attn_lb': 2.025618553161621, 'ffn_compute': 1.0228943824768066, 'ffn_align': 1.6946959460750755e-11, 'ffn_mod_lb': 1.0228943824768066}
+Elapsed: 0h 9m 50s
+
+===== Epoch 2/30 =====
+[train] step 0 task=img_rec loss=4.3196 loss_task=0.2817 aux_loss={'attn_lb': 2.014187812805176, 'ffn_compute': 1.0118540525436401, 'ffn_align': 2.5792679624048187e-12, 'ffn_mod_lb': 1.0118540525436401}
+[train] step 100 task=vqa loss=23.7973 loss_task=5.7576 aux_loss={'attn_lb': 2.0286192893981934, 'ffn_compute': 2.0559918880462646, 'ffn_align': 3.9708604163024575e-05, 'ffn_mod_lb': 2.0559918880462646}
+[train] step 200 task=img_rec loss=4.3262 loss_task=0.2659 aux_loss={'attn_lb': 2.0437233448028564, 'ffn_compute': 1.0083099603652954, 'ffn_align': 4.295604670578879e-12, 'ffn_mod_lb': 1.0083099603652954}
+[train] step 300 task=txt_rec loss=9.4990 loss_task=5.2717 aux_loss={'attn_lb': 2.0550830364227295, 'ffn_compute': 1.086146593093872, 'ffn_align': 3.260462335674674e-07, 'ffn_mod_lb': 1.086146593093872}
+[train] step 400 task=vqa loss=23.1627 loss_task=5.3780 aux_loss={'attn_lb': 2.020653009414673, 'ffn_compute': 2.0906431674957275, 'ffn_align': 0.00014556097448803484, 'ffn_mod_lb': 2.0906431674957275}
+[train] step 500 task=vqa loss=23.3978 loss_task=5.5344 aux_loss={'attn_lb': 2.0151207447052, 'ffn_compute': 2.0742108821868896, 'ffn_align': 9.595069423085079e-05, 'ffn_mod_lb': 2.0742108821868896}
+[train] step 600 task=txt_cls loss=4.7839 loss_task=0.7043 aux_loss={'attn_lb': 2.0220420360565186, 'ffn_compute': 1.0287604331970215, 'ffn_align': 8.760528413809254e-11, 'ffn_mod_lb': 1.0287604331970215}
+[train] step 700 task=vqa loss=23.4090 loss_task=5.5778 aux_loss={'attn_lb': 2.0223326683044434, 'ffn_compute': 2.0519466400146484, 'ffn_align': 4.540457666735165e-05, 'ffn_mod_lb': 2.0519466400146484}
+[train] step 800 task=vqa loss=24.1509 loss_task=6.0140 aux_loss={'attn_lb': 2.014788866043091, 'ffn_compute': 2.0230133533477783, 'ffn_align': 6.877438863739371e-05, 'ffn_mod_lb': 2.0230133533477783}
+[train] step 900 task=img_rec loss=4.3851 loss_task=0.2727 aux_loss={'attn_lb': 2.012770414352417, 'ffn_compute': 1.0497812032699585, 'ffn_align': 3.030373174617296e-11, 'ffn_mod_lb': 1.0497812032699585}
+Elapsed: 0h 19m 48s
+
+===== Epoch 3/30 =====
+[train] step 0 task=vqa loss=23.2369 loss_task=5.4692 aux_loss={'attn_lb': 2.0360653400421143, 'ffn_compute': 2.053345203399658, 'ffn_align': 0.0006536711007356644, 'ffn_mod_lb': 2.053345203399658}
+[train] step 100 task=vqa loss=22.9666 loss_task=5.2829 aux_loss={'attn_lb': 2.0160272121429443, 'ffn_compute': 2.087496280670166, 'ffn_align': 0.0009330985485576093, 'ffn_mod_lb': 2.087496280670166}
+[train] step 200 task=vqa loss=20.9478 loss_task=4.3252 aux_loss={'attn_lb': 2.0166382789611816, 'ffn_compute': 2.06204891204834, 'ffn_align': 0.0007949179271236062, 'ffn_mod_lb': 2.06204891204834}
+[train] step 300 task=vqa loss=21.8763 loss_task=4.8512 aux_loss={'attn_lb': 2.0310776233673096, 'ffn_compute': 2.0235531330108643, 'ffn_align': 0.0008748767431825399, 'ffn_mod_lb': 2.0235531330108643}
+[train] step 400 task=vqa loss=20.6143 loss_task=4.2357 aux_loss={'attn_lb': 2.0238428115844727, 'ffn_compute': 2.019127130508423, 'ffn_align': 0.0009391107596457005, 'ffn_mod_lb': 2.019127130508423}
+[train] step 500 task=vqa loss=21.0713 loss_task=4.4545 aux_loss={'attn_lb': 2.020129442214966, 'ffn_compute': 2.0255095958709717, 'ffn_align': 0.0009982208721339703, 'ffn_mod_lb': 2.0255095958709717}
+[train] step 600 task=vqa loss=20.3192 loss_task=4.0452 aux_loss={'attn_lb': 2.0341575145721436, 'ffn_compute': 2.0351715087890625, 'ffn_align': 0.0009870356880128384, 'ffn_mod_lb': 2.0351715087890625}
+[train] step 700 task=vqa loss=21.4734 loss_task=4.6250 aux_loss={'attn_lb': 2.0146923065185547, 'ffn_compute': 2.044060230255127, 'ffn_align': 0.0008870727615430951, 'ffn_mod_lb': 2.044060230255127}
+[train] step 800 task=vqa loss=21.7473 loss_task=4.7476 aux_loss={'attn_lb': 2.025648593902588, 'ffn_compute': 2.0446200370788574, 'ffn_align': 0.0011183295864611864, 'ffn_mod_lb': 2.0446200370788574}
+[train] step 900 task=vqa loss=20.6713 loss_task=4.2392 aux_loss={'attn_lb': 2.023244857788086, 'ffn_compute': 2.0320045948028564, 'ffn_align': 0.0009209751151502132, 'ffn_mod_lb': 2.0320045948028564}
+Elapsed: 0h 29m 45s
+
+===== Epoch 4/30 =====
+[train] step 0 task=img_rec loss=4.3024 loss_task=0.2337 aux_loss={'attn_lb': 2.0309176445007324, 'ffn_compute': 1.0189075469970703, 'ffn_align': 9.503943187993968e-10, 'ffn_mod_lb': 1.0189075469970703}
+[train] step 100 task=vqa loss=19.4586 loss_task=3.6668 aux_loss={'attn_lb': 2.013920307159424, 'ffn_compute': 2.01947283744812, 'ffn_align': 0.0009651168948039412, 'ffn_mod_lb': 2.01947283744812}
+[train] step 200 task=vqa loss=20.5751 loss_task=4.2113 aux_loss={'attn_lb': 2.0179638862609863, 'ffn_compute': 2.024681568145752, 'ffn_align': 0.0008959412225522101, 'ffn_mod_lb': 2.024681568145752}
+[train] step 300 task=vqa loss=20.6647 loss_task=4.2612 aux_loss={'attn_lb': 2.0185461044311523, 'ffn_compute': 2.0212409496307373, 'ffn_align': 0.0010106130503118038, 'ffn_mod_lb': 2.0212409496307373}
+[train] step 400 task=vqa loss=19.4052 loss_task=3.6060 aux_loss={'attn_lb': 2.0173239707946777, 'ffn_compute': 2.034663200378418, 'ffn_align': 0.0009958246955648065, 'ffn_mod_lb': 2.034663200378418}
+[train] step 500 task=txt_rec loss=7.4581 loss_task=3.4150 aux_loss={'attn_lb': 2.0149385929107666, 'ffn_compute': 1.0140544176101685, 'ffn_align': 1.3208941718190204e-09, 'ffn_mod_lb': 1.0140544176101685}
+[train] step 600 task=vqa loss=20.4805 loss_task=4.1659 aux_loss={'attn_lb': 2.0189452171325684, 'ffn_compute': 2.0230331420898438, 'ffn_align': 0.0009298124350607395, 'ffn_mod_lb': 2.0230331420898438}
+[train] step 700 task=txt_rec loss=7.0137 loss_task=2.9876 aux_loss={'attn_lb': 2.0161681175231934, 'ffn_compute': 1.0049397945404053, 'ffn_align': 4.0555121927354776e-07, 'ffn_mod_lb': 1.0049397945404053}
+[train] step 800 task=vqa loss=19.5741 loss_task=3.7322 aux_loss={'attn_lb': 2.016460418701172, 'ffn_compute': 2.0147106647491455, 'ffn_align': 0.0008945465669967234, 'ffn_mod_lb': 2.0147106647491455}
+[train] step 900 task=img_rec loss=4.2753 loss_task=0.2548 aux_loss={'attn_lb': 2.0103297233581543, 'ffn_compute': 1.005049467086792, 'ffn_align': 1.1448814118963924e-11, 'ffn_mod_lb': 1.005049467086792}
+Elapsed: 0h 39m 47s
+
+===== Epoch 5/30 =====
+[train] step 0 task=vqa loss=19.2284 loss_task=3.5622 aux_loss={'attn_lb': 2.0167276859283447, 'ffn_compute': 2.0133681297302246, 'ffn_align': 0.0008565961034037173, 'ffn_mod_lb': 2.0133681297302246}
+[train] step 100 task=txt_cls loss=4.7626 loss_task=0.7348 aux_loss={'attn_lb': 2.0205821990966797, 'ffn_compute': 1.003608226776123, 'ffn_align': 1.1015446332862666e-09, 'ffn_mod_lb': 1.003608226776123}
+[train] step 200 task=vqa loss=19.9453 loss_task=3.9293 aux_loss={'attn_lb': 2.010958671569824, 'ffn_compute': 2.011969566345215, 'ffn_align': 0.0008489075116813183, 'ffn_mod_lb': 2.011969566345215}
+[train] step 300 task=vqa loss=20.1798 loss_task=4.0450 aux_loss={'attn_lb': 2.016749143600464, 'ffn_compute': 2.0098276138305664, 'ffn_align': 0.0008535066735930741, 'ffn_mod_lb': 2.0098276138305664}
+[train] step 400 task=txt_rec loss=6.7699 loss_task=2.7549 aux_loss={'attn_lb': 2.0050508975982666, 'ffn_compute': 1.0049890279769897, 'ffn_align': 2.02208672028803e-09, 'ffn_mod_lb': 1.0049890279769897}
+[train] step 500 task=vqa loss=18.1288 loss_task=2.9970 aux_loss={'attn_lb': 2.0277538299560547, 'ffn_compute': 2.015418767929077, 'ffn_align': 0.0008787360857240856, 'ffn_mod_lb': 2.015418767929077}
+[train] step 600 task=txt_rec loss=6.5185 loss_task=2.4982 aux_loss={'attn_lb': 2.0092570781707764, 'ffn_compute': 1.0055220127105713, 'ffn_align': 5.1336350281872e-08, 'ffn_mod_lb': 1.0055220127105713}
+[train] step 700 task=vqa loss=19.9856 loss_task=3.9434 aux_loss={'attn_lb': 2.0170745849609375, 'ffn_compute': 2.0117032527923584, 'ffn_align': 0.000894279102794826, 'ffn_mod_lb': 2.0117032527923584}
+[train] step 800 task=img_rec loss=4.2451 loss_task=0.2244 aux_loss={'attn_lb': 2.010434627532959, 'ffn_compute': 1.005160927772522, 'ffn_align': 1.2034623297907387e-11, 'ffn_mod_lb': 1.005160927772522}
+[train] step 900 task=vqa loss=20.9630 loss_task=4.4328 aux_loss={'attn_lb': 2.0226213932037354, 'ffn_compute': 2.008286952972412, 'ffn_align': 0.000949288543779403, 'ffn_mod_lb': 2.008286952972412}
+Elapsed: 0h 49m 32s
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [0,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [1,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [2,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [3,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [4,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [5,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [6,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [7,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [8,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [9,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [10,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [11,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [12,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [13,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [14,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [15,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [16,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [17,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [18,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [19,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [20,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [21,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [22,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [23,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [24,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [25,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [26,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [27,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [28,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [29,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [30,0,0] Assertion `t >= 0 && t < n_classes` failed.
+/pytorch/aten/src/ATen/native/cuda/Loss.cu:245: nll_loss_forward_reduce_cuda_kernel_2d: block: [0,0,0], thread: [31,0,0] Assertion `t >= 0 && t < n_classes` failed.
+Traceback (most recent call last):
+  File "/home/necphy/duc_sr/multimodal_moe_semcom/main.py", line 179, in <module>
+    eval_results = eval_epoch(model, test_loaders, cfg, device, max_batches=None, eval_steps=run_cfg.eval_steps)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/necphy/duc_sr/multimodal_moe_semcom/train_test_utils.py", line 259, in eval_epoch
+    out_stats = eval_step(model, task_name, input_batch, cfg, device)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/necphy/duc_sr/multimodal_moe_semcom/train_test_utils.py", line 210, in eval_step
+    correct = (preds == labels).sum().item()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+Search for `cudaErrorAssert' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[W714 12:40:33.734598836 CachingHostAllocator.cpp:26] Warning: Exception in pinned allocator free(), rethrowing (function free)
+terminate called after throwing an instance of 'c10::AcceleratorError'
+  what():  CUDA error: device-side assert triggered
+Search for `cudaErrorAssert' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+Exception raised from currentStreamCaptureStatusMayInitCtx at /pytorch/c10/cuda/CUDAGraphsC10Utils.h:73 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x783388f6afad in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x48d2d (0x7833893aed2d in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libc10_cuda.so)
+frame #2: c10::cuda::c10_cuda_check_implementation(int, char const*, char const*, unsigned int, bool) + 0xa93 (0x7833893ae7a3 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libc10_cuda.so)
+frame #3: <unknown function> + 0xbf1c30 (0x7832d43f1c30 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xca7e52 (0x7832d44a7e52 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libtorch_cuda.so)
+frame #5: <unknown function> + 0xca1df1 (0x7832d44a1df1 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0x821b4 (0x783388f481b4 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libc10.so)
+frame #7: c10::TensorImpl::~TensorImpl() + 0x9 (0x783388f427c9 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libc10.so)
+frame #8: <unknown function> + 0x866f05 (0x783301866f05 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libtorch_python.so)
+frame #9: <unknown function> + 0x866fa1 (0x783301866fa1 in /home/necphy/duc_sr/envs/moe_env/lib/python3.12/site-packages/torch/lib/libtorch_python.so)
+frame #10: python() [0x59f2e3]
+frame #11: python() [0x57638e]
+frame #12: python() [0x5760dc]
+frame #13: python() [0x57638e]
+frame #14: python() [0x5760dc]
+frame #15: python() [0x573856]
+<omitting python frames>
+frame #17: python() [0x6b1ef9]
+frame #21: <unknown function> + 0x2a1ca (0x78338ac2a1ca in /lib/x86_64-linux-gnu/libc.so.6)
+frame #22: __libc_start_main + 0x8b (0x78338ac2a28b in /lib/x86_64-linux-gnu/libc.so.6)
+

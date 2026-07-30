@@ -85,7 +85,6 @@ def collate_text(batch, pad_id: int = 0):
         labels = torch.tensor([b["labels"]["class"] for b in batch], dtype=torch.long)
         out["labels"] = {"class": labels}
     elif task == "txt_rec":
-        # target_ids padded; set padding targets to -100 for CE ignore
         target = input_pad.clone()
         target[target == pad_id] = 0
         out["labels"] = {"target_ids": target}
@@ -109,8 +108,6 @@ class CIFAR10ImageTask(Dataset):
         self.processor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224-in21k")
         # self.processor = ViTImageProcessor.from_pretrained("nateraw/vit-base-patch16-224-cifar10")
 
-
-
         self.ds = CIFAR10(root=root, train=train, download=True)
 
     def __len__(self):
@@ -125,8 +122,8 @@ class CIFAR10ImageTask(Dataset):
             return {
                 "task": "img_cls",
                 "vision": {
-                    "image": img,  # keep full image; your ViT processor can handle patching
-                    "patch_size": self.patch_size,  # 32 per paper
+                    "image": img,
+                    "patch_size": self.patch_size,
                 },
                 "labels": {
                     "class": int(label),
@@ -135,17 +132,20 @@ class CIFAR10ImageTask(Dataset):
 
         # img_rec
         # patches = patchify(img, self.patch_size)  # patch=4 per paper
-        return {
-            "task": "img_rec",
-            "vision": {
-                "image": img,      # [L, patch_dim]
-                "patch_size": self.patch_size,
-                # "image_shape": img.shape
-            },
-            "labels": {
-                "class": img.clone(),  # class is the original img
-            },
-        }
+        elif self.task == "img_rec":
+            return {
+                "task": "img_rec",
+                "vision": {
+                    "image": img,      # [L, patch_dim]
+                    "patch_size": self.patch_size,
+                    # "image_shape": img.shape
+                },
+                "labels": {
+                    "class": img.clone(),  # class is the original img
+                },
+            }
+        else:
+            raise ValueError(f"Unknown task: {self.task}")
 
 
 class SST2TextTask(Dataset):
@@ -166,7 +166,7 @@ class SST2TextTask(Dataset):
         text = self.texts[idx]
         enc = self.tokenizer(
             text,
-            padding=False,
+            padding=False, # no padding here because it is single sentence; padding will be done in collate_text
             truncation=True,
             max_length=self.max_len,
             return_tensors=None,
@@ -180,9 +180,11 @@ class SST2TextTask(Dataset):
         }
         if self.task == "txt_cls":
             item["labels"] = {"class": int(self.labels[idx])}
-        else:
+        elif self.task == "txt_rec":
             # reconstruct the same tokens; loss should ignore padding after collate
             item["labels"] = {"target_ids": item["text"]["input_ids"].clone()}
+        else:
+            raise ValueError(f"Unknown task: {self.task}")
         return item
 
 
@@ -207,6 +209,8 @@ def collate_vqa(batch, pad_id: int = 0):
         attn_pad[i, :L] = attn[i]
 
     labels = torch.tensor([b["labels"]["class"] for b in batch], dtype=torch.long)
+    scores = torch.stack([b["labels"]["scores"] for b in batch], dim=0)
+
 
     patch_size = batch[0]["vision"]["patch_size"]
 
@@ -222,8 +226,96 @@ def collate_vqa(batch, pad_id: int = 0):
         },
         "labels": {
             "class": labels,
+            "scores": scores,
         },
     }
+
+# class VQAv2Task(Dataset): # this class assumes soft scores are precomputed
+#     def __init__(
+#         self,
+#         root: str,
+#         split: str,
+#         tokenizer,
+#         task: str = "vqa",
+#         max_len: int = 32,
+#         patch_size: int = 16,
+#         top_k: int = 3000,
+#         image_processor_name: str = "google/vit-base-patch16-224-in21k",
+#     ):
+#         assert task == "vqa"
+#         assert split in ["train", "validation"]
+
+#         self.root = root
+#         self.split = split
+#         self.task = task
+#         self.tokenizer = tokenizer
+#         self.max_len = max_len
+#         self.patch_size = patch_size
+#         self.processor = ViTImageProcessor.from_pretrained(image_processor_name)
+
+#         cache_dir = os.path.join(root, "cache")
+
+#         with open(os.path.join(cache_dir, f"ans2id_top{top_k}.json"), "r") as f:
+#             self.ans2id = json.load(f)
+
+#         with open(os.path.join(cache_dir, f"id2ans_top{top_k}.json"), "r") as f:
+#             raw_id2ans = json.load(f)
+#             self.id2ans = {int(k): v for k, v in raw_id2ans.items()}
+
+#         samples_file = f"{split}_samples_top{top_k}.json"
+#         with open(os.path.join(cache_dir, samples_file), "r") as f:
+#             self.samples = json.load(f)
+
+#         self.img_dir = os.path.join(root, "train2014" if split == "train" else "val2014")
+
+#     def __len__(self):
+#         return len(self.samples)
+
+#     def _image_path(self, image_id: int) -> str:
+#         split_name = "train2014" if self.split == "train" else "val2014"
+#         fname = f"COCO_{split_name}_{image_id:012d}.jpg"
+#         return os.path.join(self.img_dir, fname)
+
+#     def __getitem__(self, idx):
+#         ex = self.samples[idx]
+
+#         image_path = self._image_path(ex["image_id"])
+#         img = Image.open(image_path).convert("RGB")
+#         img = self.processor(images=img, return_tensors="pt")["pixel_values"].squeeze(0)
+
+#         enc = self.tokenizer(
+#             ex["question"],
+#             padding=False,
+#             truncation=True,
+#             max_length=self.max_len,
+#             return_tensors=None,
+#         )
+
+#         scores = torch.zeros(len(self.ans2id), dtype=torch.float32)
+#         if self.split == "train":
+#             scores = torch.tensor(ex.get("answer_scores", scores.tolist()), dtype=torch.float32)
+            
+#         return {
+#             "task": "vqa",
+#             "vision": {
+#                 "image": img,
+#                 "patch_size": self.patch_size,
+#             },
+#             "text": {
+#                 "input_ids": torch.tensor(enc["input_ids"], dtype=torch.long),
+#                 "attention_mask": torch.tensor(enc["attention_mask"], dtype=torch.long),
+#             },
+#             "labels": {
+#                 "class": int(ex["answer_id"]),
+#                 "scores": scores
+#             },
+#             "meta": {
+#                 "question_id": ex["question_id"],
+#                 "image_id": ex["image_id"],
+#                 "answer_text": ex["answer"],
+#                 "question": ex["question"],
+#             },
+#         }
 
 class VQAv2Task(Dataset):
     def __init__(
@@ -234,7 +326,7 @@ class VQAv2Task(Dataset):
         task: str = "vqa",
         max_len: int = 32,
         patch_size: int = 16,
-        top_k: int = 3000,
+        top_k: int = 3129,
         image_processor_name: str = "google/vit-base-patch16-224-in21k",
     ):
         assert task == "vqa"
@@ -286,6 +378,28 @@ class VQAv2Task(Dataset):
             return_tensors=None,
         )
 
+        scores = torch.zeros(len(self.ans2id), dtype=torch.float32)
+        
+        # if self.split == "train":
+            # ex["answers"] contains the 10 pre-normalized human answers
+        # counts = Counter(ex["answers"])
+        
+        # for ans, occur in counts.items():
+        #     ans_id = self.ans2id.get(ans)
+        #     if ans_id is not None:
+        #         if occur == 1:
+        #             score = 0.3
+        #         elif occur == 2:
+        #             score = 0.6
+        #         elif occur == 3:
+        #             score = 0.9
+        #         elif occur >= 4:
+        #             score = 1.0
+        #         else:
+        #             continue 
+                
+        #         scores[ans_id] = score
+            
         return {
             "task": "vqa",
             "vision": {
@@ -298,6 +412,7 @@ class VQAv2Task(Dataset):
             },
             "labels": {
                 "class": int(ex["answer_id"]),
+                "scores": scores
             },
             "meta": {
                 "question_id": ex["question_id"],
@@ -306,8 +421,6 @@ class VQAv2Task(Dataset):
                 "question": ex["question"],
             },
         }
-    
-
 
 class MOSEIFeatureDataset(Dataset):
     """
@@ -389,20 +502,6 @@ def collate_mosei(batch, pad_id=0):
 
     return out
 
-
-
-# def multitask_batcher(loaders: dict):
-#     iters = {k: iter(v) for k, v in loaders.items()}
-#     keys = list(loaders.keys())
-
-#     while True:
-#         for k in keys:
-#             try:
-#                 yield k, next(iters[k])
-#             except StopIteration:
-#                 iters[k] = iter(loaders[k])
-#                 yield k, next(iters[k])
-
 class StepBasedMultiTaskBatcher:
     def __init__(self, loaders: dict, task_names=None, task_probs=None):
         self.loaders = loaders
@@ -469,12 +568,14 @@ def batch_to_inputs(batch):
     elif batch["task"] in ["txt_cls", "txt_rec"]:
         inputs["text_tokens"] = batch["text"]["input_ids"]
         inputs["labels"] = batch["labels"]["class"] if batch["task"] == "txt_cls" else batch["labels"]["target_ids"]
+        
         inputs["task_id"] = torch.full((inputs["labels"].shape[0],), 2 if batch["task"] == "txt_cls" else 3, dtype=torch.long)  # task_id 2 for txt_cls, 3 for txt_rec
         inputs['attention_mask'] = batch['text']['attention_mask']
 
     elif batch["task"] == "vqa":
         inputs["vision_tokens"] = batch["vision"]["image"]
         inputs["text_tokens"] = batch["text"]["input_ids"]
+        inputs["scores"] = batch["labels"]["scores"].to(torch.float32)
         inputs["labels"] = batch["labels"]["class"]
         inputs["task_id"] = torch.full((inputs["labels"].shape[0],), 4, dtype=torch.long)  # task_id 4 for vqa
         inputs['attention_mask'] = batch['text']['attention_mask']

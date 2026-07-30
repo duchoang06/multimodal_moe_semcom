@@ -14,10 +14,7 @@ import torch.nn.functional as F
 
 from utils import topk_mask, build_causal_mask, fix_seed
 from dataset import multitask_batcher, batch_to_inputs, StepBasedMultiTaskBatcher
-
-from base_models import TextEmbedder, VisionEmbedder
-from semcom_models import MoAMoH_SemCom
-
+from base_models import MultiModalMultiTaskMoHMoE, TextEmbedder, VisionEmbedder
 from config import ModelConfig, RunConfig
 from dataset import CIFAR10ImageTask, SST2TextTask, collate_img, collate_text, VQAv2Task, collate_vqa
 from transformers import BertTokenizer
@@ -120,7 +117,7 @@ if __name__ == "__main__":
             raise Exception(f"Unknown task {task} in dataloader setup")
 
 
-    model = MoAMoH_SemCom(cfg, run_cfg, vision_embedder, text_embedder, speech_embedder=None).to(device)
+    model = MultiModalMultiTaskMoHMoE(cfg, run_cfg, vision_embedder, text_embedder, speech_embedder=None).to(device)
 
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Trainable parameters: {trainable_params:,}")
@@ -205,7 +202,7 @@ if __name__ == "__main__":
     # save the final model
     os.makedirs("./checkpoints", exist_ok=True)
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    # torch.save(model.state_dict(), f"./checkpoints/semcom_{timestamp}.pth")
+    torch.save(model.state_dict(), f"./checkpoints/fixed_vision_token_{timestamp}.pth")
 
 
-# nohup python -u main.py > ./log/semcom_fullmodel_20dB_$(date +%Y%m%d_%H%M%S).log 2>&1 & 
+# nohup python -u main.py > ./log/fixed_vision_token_$(date +%Y%m%d_%H%M%S).log 2>&1 & 

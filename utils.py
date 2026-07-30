@@ -1,3 +1,4 @@
+from typing import Optional
 import torch 
 import torch.nn as nn
 from torch.nn import functional as F
@@ -283,26 +284,35 @@ def final_loss_scaler(task_name: str, base_loss: torch.Tensor) -> torch.Tensor:
 def attn_load_balance(
     gates: torch.Tensor,   # [B*T, hr]
     mask: torch.Tensor,    # [B*T, hr]
+    modality_mask: torch.Tensor, # [B*T]
+    pad_mask: Optional[torch.Tensor] = None, 
 ) -> torch.Tensor:
+    '''
+        encouraging uniform routing across experts
+    '''
     num_tokens, num_routed_heads = gates.shape
 
-    # P_i: mean softmax score for each routed head across all tokens — [hr]
-    P = gates.mean(dim=0)
+    active_tokens = modality_mask.float() 
 
-    # f_i: fraction of tokens that selected each routed head — [hr]
-    f = mask.mean(dim=0)
+    if pad_mask is not None:
+        active_tokens = active_tokens * pad_mask.float()
 
-    # L_b = sum_i P_i * f_i
-    # Multiplied by num_routed_heads^2 following standard MoE practice
-    # (keeps loss scale invariant to number of heads, matches official code)
-    loss = torch.sum(P * f) 
+    valid_count = active_tokens.sum() + 1e-5
 
+    P = (gates * active_tokens.unsqueeze(-1)).sum(dim=0) / valid_count
+    f = (mask * active_tokens.unsqueeze(-1)).sum(dim=0) / valid_count
+
+    loss = torch.sum(P * f) * num_routed_heads
     return loss
 
-def loss_parser(losses, device):
+def loss_parser_nonsemcom(losses, device):
     num_blks = len(losses)
+    
     attn_lb_loss = torch.tensor(0.0, device=device)
-    ffn_mi_loss = torch.tensor(0.0, device=device)
+    ffn_compute_loss = torch.tensor(0.0, device=device)
+    ffn_align_loss = torch.tensor(0.0, device=device)
+    ffn_mod_lb_loss = torch.tensor(0.0, device=device)
+    shared_router_lb_loss = torch.tensor(0.0, device=device)
 
     for i in range(num_blks):
         blk_loss = losses[i]
@@ -310,13 +320,96 @@ def loss_parser(losses, device):
         # ffn_mi_loss += blk_loss.get('ffn', {}).get('mi', 0.0)
 
         # print(blk_loss['ffn']['mi'])
-        ffn_mi_loss += blk_loss.get('ffn', {}).get('mi', 0.0)
+        ffn_compute_loss += blk_loss.get('ffn', {}).get('compute', 0.0)
+        ffn_align_loss += blk_loss.get('ffn', {}).get('align', 0.0)
+        ffn_mod_lb_loss += blk_loss.get('ffn', {}).get('mod_lb', 0.0)
 
-
-    #this is the final parser for loss computing, single-level dict only 
+    #single-level dict only 
     loss_dict = {
-        'attn_lb': attn_lb_loss,
-        'ffn_mi': ffn_mi_loss,
+        'attn_lb': attn_lb_loss / num_blks,
+        'ffn_compute': ffn_compute_loss / num_blks,
+        'ffn_align': ffn_align_loss / num_blks,
+        'ffn_mod_lb': ffn_mod_lb_loss / num_blks,
     }
 
     return loss_dict
+
+def loss_parser(losses, device):
+    se_attn_lb_loss = torch.tensor(0.0, device=device)
+    se_ffn_compute_loss = torch.tensor(0.0, device=device)
+    se_ffn_align_loss = torch.tensor(0.0, device=device)
+    se_ffn_mod_lb_loss = torch.tensor(0.0, device=device)
+    ce_router_lb_loss = torch.tensor(0.0, device=device)
+
+    # semantic encoder parsing
+    semantic_encoder_loss = losses.get('semantic_encoder', None)
+    num_blks_encoder = len(semantic_encoder_loss)
+    for blk_loss in semantic_encoder_loss:
+        se_attn_lb_loss += blk_loss.get('attn', {}).get('lb', 0.0)
+        # ffn_mi_loss += blk_loss.get('ffn', {}).get('mi', 0.0)
+
+        # print(blk_loss['ffn']['mi'])
+        se_ffn_compute_loss += blk_loss.get('ffn', {}).get('compute', 0.0)
+        se_ffn_align_loss += blk_loss.get('ffn', {}).get('align', 0.0)
+        se_ffn_mod_lb_loss += blk_loss.get('ffn', {}).get('mod_lb', 0.0)
+
+    # channel encoder parsing
+    channel_encoder_loss = losses.get('channel_encoder', None)
+    ce_router_lb_loss = channel_encoder_loss.get('router_lb', 0.0)
+
+
+    #single-level dict only 
+    loss_dict = {
+        'se_attn_lb': se_attn_lb_loss / num_blks_encoder,
+        'se_ffn_compute': se_ffn_compute_loss / num_blks_encoder,
+        'se_ffn_align': se_ffn_align_loss / num_blks_encoder,
+        'se_ffn_mod_lb': se_ffn_mod_lb_loss / num_blks_encoder,
+        'ce_router_lb': ce_router_lb_loss,
+    }
+    
+    return loss_dict
+
+
+
+# @torch.no_grad()
+# def evaluate_vqa(task, model, dataloader, device, print_freq=500):
+#     model.eval()
+#     dataset = dataloader.dataset
+#     qid_list = [ques['question_id'] for ques in dataset.ques_list]
+#     ans_ix_list = []
+#     i = 0
+
+#     for batch_idx, (imgs, texts, targets) in enumerate(dataloader):
+#         imgs, texts, targets = imgs.to(device), texts.to(device), targets.to(device)
+#         batch_size = imgs.shape[0]
+#         i += batch_size
+#         outputs = model(img=imgs, text=texts, task=task)
+#         pred_np = outputs.cpu().data.numpy()
+#         pred_argmax = np.argmax(pred_np, axis=1)
+#         if pred_argmax.shape[0] != dataset.configs.eval_batch_size:
+#             pred_argmax = np.pad(
+#                 pred_argmax,(0, dataset.configs.eval_batch_size - pred_argmax.shape[0]),
+#                 mode='constant',constant_values=-1)
+#         ans_ix_list.append(pred_argmax)
+#         if batch_idx % print_freq == 0:
+#             print('Test %d/%d:' %(batch_idx*batch_size, 
+#                         len(dataloader.dataset)))
+        
+#     ans_ix_list = np.array(ans_ix_list).reshape(-1)
+#     result = [{
+#         'answer': dataset.ix_to_ans[str(ans_ix_list[qix])],  # ix_to_ans(load with json) keys are type of string
+#         'question_id': int(qid_list[qix])}for qix in range(qid_list.__len__())]
+
+#     result_eval_file = 'vqaeval_result/result_run_' + dataset.configs.version + '.json'
+#     print('Save the result to file: {}'.format(result_eval_file))
+#     json.dump(result, open(result_eval_file, 'w'))
+
+#     # create vqa object and vqaRes object
+#     ques_file_path = dataset.configs.question_path['val']
+#     ans_file_path = dataset.configs.answer_path['val']
+#     vqa = VQA_Tool(ans_file_path, ques_file_path)
+#     vqaRes = vqa.loadRes(result_eval_file, ques_file_path)
+#     vqaEval = VQA_Eval(vqa, vqaRes, n=2)  
+#     vqaEval.evaluate()
+
+#     return vqaEval.accuracy
