@@ -1,0 +1,419 @@
+nohup: ignoring input
+Process ID: 403555
+--- Model Configuration:
+  d_model: 768
+  n_layers: 8
+  n_modalities: 2
+  active_modalities: ['vision', 'text']
+  task_output_dims: {'img_cls': 10, 'img_rec': None, 'txt_cls': 2, 'txt_rec': 30522, 'vqa': 3129}
+  n_tasks: 5
+  max_seq_len: 512
+  img_size: 224
+  patch_size: 16
+  attn_n_heads: 12
+  attn_head_dim: 64
+  attn_topk: 2
+  attn_shared_heads: 2
+  attn_router_dropout: 0.1
+  msoe_modality_blk_hidden: 1536
+  msoe_topk: 1
+  msoe_n_experts: 4
+  mtoe_expert_hidden: 3072
+  crossmodal_threshold: 0.5
+  dropout: 0.1
+  channel_hidden: 3072
+  transmit_dim: 192
+  se_attn_lb_weight: 1.0
+  se_ffn_mod_lb_weight: 1.0
+  se_ffn_compute_weight: 1.0
+  se_ffn_align_weight: 10.0
+  ce_router_lb_weight: 0.01
+  img_rec_loss_weight: 1.0
+  img_cls_loss_weight: 1.0
+  vqa_loss_weight: 1.0
+  txt_rec_loss_weight: 1.0
+  txt_cls_loss_weight: 1.0
+  spc_loss_weight: 1.0
+Run Configuration:
+  task_selection: ['img_rec', 'img_cls', 'vqa', 'txt_rec', 'txt_cls']
+  sample_task_probs: [0.15, 0.05, 0.6, 0.15, 0.05]
+  train_batch_size: 64
+  test_batch_size: 64
+  steps_per_epoch: 1000
+  eval_steps: 500
+  num_epochs: 25
+  vocab_size: 30522
+  snr_dB: 20.0
+  fading: none
+  rician_k: 3.0
+Loading weights:   0%|          | 0/200 [00:00<?, ?it/s]Loading weights: 100%|██████████| 200/200 [00:00<00:00, 20508.54it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 19492.90it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Trainable parameters: 255,556,067
+
+===== Epoch 1/25 =====
+[train] step 0 task=vqa loss=16.1094 loss_task=8.0547 aux_loss={'se_attn_lb': 2.8256452083587646, 'se_ffn_compute': 1.856118083000183, 'se_ffn_align': 0.16616587340831757, 'se_ffn_mod_lb': 2.5568039417266846}
+[train] step 100 task=vqa loss=12.4788 loss_task=6.2394 aux_loss={'se_attn_lb': 2.8522486686706543, 'se_ffn_compute': 1.9401742219924927, 'se_ffn_align': 0.17862848937511444, 'se_ffn_mod_lb': 2.6251626014709473}
+[train] step 200 task=img_rec loss=0.4331 loss_task=0.4331 aux_loss={'se_attn_lb': 2.8581511974334717, 'se_ffn_compute': 2.054032325744629, 'se_ffn_align': 0.30108878016471863, 'se_ffn_mod_lb': 1.3755393028259277}
+[train] step 300 task=vqa loss=11.9791 loss_task=5.9896 aux_loss={'se_attn_lb': 2.963832378387451, 'se_ffn_compute': 2.245333194732666, 'se_ffn_align': 0.2610715925693512, 'se_ffn_mod_lb': 2.7309682369232178}
+[train] step 400 task=img_rec loss=0.2797 loss_task=0.2797 aux_loss={'se_attn_lb': 4.2119598388671875, 'se_ffn_compute': 2.4663050174713135, 'se_ffn_align': 0.4487256109714508, 'se_ffn_mod_lb': 1.4766185283660889}
+[train] step 500 task=vqa loss=9.0813 loss_task=4.5407 aux_loss={'se_attn_lb': 2.8383588790893555, 'se_ffn_compute': 2.1839637756347656, 'se_ffn_align': 0.14924120903015137, 'se_ffn_mod_lb': 2.6318278312683105}
+[train] step 600 task=vqa loss=7.9040 loss_task=3.9520 aux_loss={'se_attn_lb': 2.9084019660949707, 'se_ffn_compute': 1.9874067306518555, 'se_ffn_align': 0.1282554715871811, 'se_ffn_mod_lb': 2.432122230529785}
+[train] step 700 task=txt_rec loss=5.7281 loss_task=5.7281 aux_loss={'se_attn_lb': 2.961857557296753, 'se_ffn_compute': 3.249697208404541, 'se_ffn_align': 0.6900962591171265, 'se_ffn_mod_lb': 1.3111170530319214}
+[train] step 800 task=vqa loss=5.8405 loss_task=2.9202 aux_loss={'se_attn_lb': 2.916572332382202, 'se_ffn_compute': 1.9017040729522705, 'se_ffn_align': 0.13907583057880402, 'se_ffn_mod_lb': 2.3728795051574707}
+[train] step 900 task=txt_rec loss=4.8485 loss_task=4.8485 aux_loss={'se_attn_lb': 2.75095272064209, 'se_ffn_compute': 3.4389853477478027, 'se_ffn_align': 0.7625385522842407, 'se_ffn_mod_lb': 1.2492692470550537}
+Elapsed: 0h 6m 20s
+
+===== Epoch 2/25 =====
+[train] step 0 task=vqa loss=7.4186 loss_task=3.7093 aux_loss={'se_attn_lb': 2.888760566711426, 'se_ffn_compute': 1.8448799848556519, 'se_ffn_align': 0.12209556251764297, 'se_ffn_mod_lb': 2.380795955657959}
+[train] step 100 task=vqa loss=7.5157 loss_task=3.7578 aux_loss={'se_attn_lb': 3.0075745582580566, 'se_ffn_compute': 1.7951056957244873, 'se_ffn_align': 0.11585120856761932, 'se_ffn_mod_lb': 2.3645050525665283}
+[train] step 200 task=vqa loss=7.0517 loss_task=3.5259 aux_loss={'se_attn_lb': 2.935441732406616, 'se_ffn_compute': 1.7788636684417725, 'se_ffn_align': 0.130582794547081, 'se_ffn_mod_lb': 2.3066704273223877}
+[train] step 300 task=vqa loss=6.3837 loss_task=3.1919 aux_loss={'se_attn_lb': 3.083491802215576, 'se_ffn_compute': 1.7188811302185059, 'se_ffn_align': 0.12640219926834106, 'se_ffn_mod_lb': 2.2840676307678223}
+[train] step 400 task=txt_cls loss=0.7988 loss_task=0.7988 aux_loss={'se_attn_lb': 2.980914354324341, 'se_ffn_compute': 1.7157151699066162, 'se_ffn_align': 0.21412697434425354, 'se_ffn_mod_lb': 1.3491697311401367}
+[train] step 500 task=txt_rec loss=3.6408 loss_task=3.6408 aux_loss={'se_attn_lb': 2.4458680152893066, 'se_ffn_compute': 2.3780088424682617, 'se_ffn_align': 0.39942467212677, 'se_ffn_mod_lb': 1.1388335227966309}
+[train] step 600 task=txt_cls loss=0.7376 loss_task=0.7376 aux_loss={'se_attn_lb': 3.0467047691345215, 'se_ffn_compute': 1.4448752403259277, 'se_ffn_align': 0.1588524430990219, 'se_ffn_mod_lb': 1.3782775402069092}
+[train] step 700 task=vqa loss=6.1463 loss_task=3.0732 aux_loss={'se_attn_lb': 3.421522617340088, 'se_ffn_compute': 1.5190417766571045, 'se_ffn_align': 0.09070843458175659, 'se_ffn_mod_lb': 2.254570245742798}
+[train] step 800 task=vqa loss=8.1515 loss_task=4.0758 aux_loss={'se_attn_lb': 3.3328750133514404, 'se_ffn_compute': 1.577768087387085, 'se_ffn_align': 0.10401324927806854, 'se_ffn_mod_lb': 2.263105630874634}
+[train] step 900 task=img_rec loss=0.1875 loss_task=0.1875 aux_loss={'se_attn_lb': 7.031946182250977, 'se_ffn_compute': 2.447953701019287, 'se_ffn_align': 0.4317272901535034, 'se_ffn_mod_lb': 1.418337106704712}
+Elapsed: 0h 12m 39s
+
+===== Epoch 3/25 =====
+[train] step 0 task=vqa loss=7.0900 loss_task=3.5450 aux_loss={'se_attn_lb': 3.5176875591278076, 'se_ffn_compute': 1.2456141710281372, 'se_ffn_align': 0.06883396208286285, 'se_ffn_mod_lb': 2.2274069786071777}
+[train] step 100 task=vqa loss=6.0619 loss_task=3.0310 aux_loss={'se_attn_lb': 3.6009557247161865, 'se_ffn_compute': 1.1153041124343872, 'se_ffn_align': 0.06150119751691818, 'se_ffn_mod_lb': 2.2419450283050537}
+[train] step 200 task=vqa loss=4.7540 loss_task=2.3770 aux_loss={'se_attn_lb': 3.668189287185669, 'se_ffn_compute': 1.0712816715240479, 'se_ffn_align': 0.05124161019921303, 'se_ffn_mod_lb': 2.216611385345459}
+[train] step 300 task=txt_rec loss=2.6087 loss_task=2.6087 aux_loss={'se_attn_lb': 2.639831304550171, 'se_ffn_compute': 2.0843217372894287, 'se_ffn_align': 0.3469476103782654, 'se_ffn_mod_lb': 1.1425830125808716}
+[train] step 400 task=vqa loss=5.1832 loss_task=2.5916 aux_loss={'se_attn_lb': 4.102069854736328, 'se_ffn_compute': 1.1163872480392456, 'se_ffn_align': 0.0645269975066185, 'se_ffn_mod_lb': 2.3433127403259277}
+[train] step 500 task=txt_rec loss=2.5137 loss_task=2.5137 aux_loss={'se_attn_lb': 2.6436760425567627, 'se_ffn_compute': 1.9016880989074707, 'se_ffn_align': 0.3068045377731323, 'se_ffn_mod_lb': 1.1518826484680176}
+[train] step 600 task=img_cls loss=0.1815 loss_task=0.1815 aux_loss={'se_attn_lb': 2.6067700386047363, 'se_ffn_compute': 1.5170114040374756, 'se_ffn_align': 0.18036414682865143, 'se_ffn_mod_lb': 1.0789746046066284}
+[train] step 700 task=vqa loss=5.9291 loss_task=2.9645 aux_loss={'se_attn_lb': 3.4968905448913574, 'se_ffn_compute': 1.1061118841171265, 'se_ffn_align': 0.058389246463775635, 'se_ffn_mod_lb': 2.1800451278686523}
+[train] step 800 task=img_rec loss=0.1607 loss_task=0.1607 aux_loss={'se_attn_lb': 7.1987199783325195, 'se_ffn_compute': 2.3249287605285645, 'se_ffn_align': 0.4015207290649414, 'se_ffn_mod_lb': 1.3760396242141724}
+[train] step 900 task=vqa loss=5.9852 loss_task=2.9926 aux_loss={'se_attn_lb': 3.6956377029418945, 'se_ffn_compute': 0.9731221199035645, 'se_ffn_align': 0.06013021618127823, 'se_ffn_mod_lb': 2.22880220413208}
+Elapsed: 0h 19m 1s
+
+===== Epoch 4/25 =====
+[train] step 0 task=txt_rec loss=1.4545 loss_task=1.4545 aux_loss={'se_attn_lb': 3.15700101852417, 'se_ffn_compute': 1.658189058303833, 'se_ffn_align': 0.28471168875694275, 'se_ffn_mod_lb': 1.1415345668792725}
+[train] step 100 task=txt_rec loss=1.8280 loss_task=1.8280 aux_loss={'se_attn_lb': 3.0891127586364746, 'se_ffn_compute': 1.5536253452301025, 'se_ffn_align': 0.24508556723594666, 'se_ffn_mod_lb': 1.1768935918807983}
+[train] step 200 task=img_cls loss=0.2151 loss_task=0.2151 aux_loss={'se_attn_lb': 2.8772997856140137, 'se_ffn_compute': 1.4260059595108032, 'se_ffn_align': 0.1702788770198822, 'se_ffn_mod_lb': 1.0820287466049194}
+[train] step 300 task=img_cls loss=0.3766 loss_task=0.3766 aux_loss={'se_attn_lb': 2.808128833770752, 'se_ffn_compute': 1.3235422372817993, 'se_ffn_align': 0.14812085032463074, 'se_ffn_mod_lb': 1.0824220180511475}
+[train] step 400 task=txt_rec loss=1.2302 loss_task=1.2302 aux_loss={'se_attn_lb': 3.4390203952789307, 'se_ffn_compute': 1.5593154430389404, 'se_ffn_align': 0.26495257019996643, 'se_ffn_mod_lb': 1.128591775894165}
+[train] step 500 task=img_rec loss=0.1583 loss_task=0.1583 aux_loss={'se_attn_lb': 7.371870040893555, 'se_ffn_compute': 2.142301082611084, 'se_ffn_align': 0.3555755019187927, 'se_ffn_mod_lb': 1.3609790802001953}
+[train] step 600 task=txt_rec loss=1.4323 loss_task=1.4323 aux_loss={'se_attn_lb': 3.4614105224609375, 'se_ffn_compute': 1.3237452507019043, 'se_ffn_align': 0.21141886711120605, 'se_ffn_mod_lb': 1.1223649978637695}
+[train] step 700 task=vqa loss=7.6940 loss_task=3.8470 aux_loss={'se_attn_lb': 3.8115692138671875, 'se_ffn_compute': 0.8375827670097351, 'se_ffn_align': 0.07264076918363571, 'se_ffn_mod_lb': 2.1813337802886963}
+[train] step 800 task=vqa loss=4.7541 loss_task=2.3770 aux_loss={'se_attn_lb': 3.8103623390197754, 'se_ffn_compute': 0.9370332360267639, 'se_ffn_align': 0.06267869472503662, 'se_ffn_mod_lb': 2.2219529151916504}
+[train] step 900 task=vqa loss=8.0439 loss_task=4.0219 aux_loss={'se_attn_lb': 3.9360077381134033, 'se_ffn_compute': 0.9239699244499207, 'se_ffn_align': 0.04900003969669342, 'se_ffn_mod_lb': 2.2325644493103027}
+Elapsed: 0h 25m 23s
+
+===== Epoch 5/25 =====
+[train] step 0 task=vqa loss=5.7717 loss_task=2.8859 aux_loss={'se_attn_lb': 3.8190670013427734, 'se_ffn_compute': 0.8820309042930603, 'se_ffn_align': 0.060654111206531525, 'se_ffn_mod_lb': 2.1978440284729004}
+[train] step 100 task=txt_rec loss=1.2490 loss_task=1.2490 aux_loss={'se_attn_lb': 3.668731927871704, 'se_ffn_compute': 1.610314965248108, 'se_ffn_align': 0.2802113890647888, 'se_ffn_mod_lb': 1.1060230731964111}
+[train] step 200 task=vqa loss=5.5118 loss_task=2.7559 aux_loss={'se_attn_lb': 4.03123664855957, 'se_ffn_compute': 0.8628178238868713, 'se_ffn_align': 0.052813947200775146, 'se_ffn_mod_lb': 2.223989248275757}
+[train] step 300 task=txt_rec loss=1.2110 loss_task=1.2110 aux_loss={'se_attn_lb': 3.5279855728149414, 'se_ffn_compute': 1.54593825340271, 'se_ffn_align': 0.26396408677101135, 'se_ffn_mod_lb': 1.0894759893417358}
+[train] step 400 task=img_rec loss=0.1400 loss_task=0.1400 aux_loss={'se_attn_lb': 7.723963737487793, 'se_ffn_compute': 2.0714786052703857, 'se_ffn_align': 0.3498573303222656, 'se_ffn_mod_lb': 1.3501553535461426}
+[train] step 500 task=img_rec loss=0.1285 loss_task=0.1285 aux_loss={'se_attn_lb': 7.611362934112549, 'se_ffn_compute': 1.8880928754806519, 'se_ffn_align': 0.2968410849571228, 'se_ffn_mod_lb': 1.3324482440948486}
+[train] step 600 task=txt_rec loss=1.0209 loss_task=1.0209 aux_loss={'se_attn_lb': 3.728717803955078, 'se_ffn_compute': 1.4519810676574707, 'se_ffn_align': 0.24580910801887512, 'se_ffn_mod_lb': 1.0955722332000732}
+[train] step 700 task=vqa loss=5.9182 loss_task=2.9591 aux_loss={'se_attn_lb': 4.2657670974731445, 'se_ffn_compute': 0.8332362174987793, 'se_ffn_align': 0.055304624140262604, 'se_ffn_mod_lb': 2.2052619457244873}
+[train] step 800 task=txt_rec loss=0.9851 loss_task=0.9851 aux_loss={'se_attn_lb': 3.69118070602417, 'se_ffn_compute': 1.398537278175354, 'se_ffn_align': 0.2376871407032013, 'se_ffn_mod_lb': 1.1078044176101685}
+[train] step 900 task=img_rec loss=0.1320 loss_task=0.1320 aux_loss={'se_attn_lb': 7.102957248687744, 'se_ffn_compute': 1.88969886302948, 'se_ffn_align': 0.28833892941474915, 'se_ffn_mod_lb': 1.3129184246063232}
+Elapsed: 0h 31m 48s
+Eval results:
+  img_rec: loss = 0.1265, task_loss = 0.1265, 
+  txt_rec: loss = 1.1612, task_loss = 1.1612, 
+  txt_cls: loss = 0.1086, task_loss = 0.1086, , acc=0.7035
+  vqa: loss = 2.8624, task_loss = 2.8624, , acc=0.3511
+  img_cls: loss = 0.1283, task_loss = 0.1283, , acc=0.9614
+
+===== Epoch 6/25 =====
+[train] step 0 task=txt_cls loss=0.4776 loss_task=0.4776 aux_loss={'se_attn_lb': 3.646653890609741, 'se_ffn_compute': 1.0527794361114502, 'se_ffn_align': 0.1576095074415207, 'se_ffn_mod_lb': 1.251911997795105}
+[train] step 100 task=vqa loss=6.8860 loss_task=3.4430 aux_loss={'se_attn_lb': 4.074767112731934, 'se_ffn_compute': 0.9018462896347046, 'se_ffn_align': 0.06482532620429993, 'se_ffn_mod_lb': 2.2173147201538086}
+[train] step 200 task=vqa loss=6.7916 loss_task=3.3958 aux_loss={'se_attn_lb': 4.33858060836792, 'se_ffn_compute': 0.7370796799659729, 'se_ffn_align': 0.07406405359506607, 'se_ffn_mod_lb': 2.194828987121582}
+[train] step 300 task=vqa loss=5.4417 loss_task=2.7209 aux_loss={'se_attn_lb': 4.422623634338379, 'se_ffn_compute': 0.7738925814628601, 'se_ffn_align': 0.05921929329633713, 'se_ffn_mod_lb': 2.2497940063476562}
+[train] step 400 task=vqa loss=3.9269 loss_task=1.9635 aux_loss={'se_attn_lb': 4.448526859283447, 'se_ffn_compute': 0.853331446647644, 'se_ffn_align': 0.069863460958004, 'se_ffn_mod_lb': 2.2226181030273438}
+[train] step 500 task=vqa loss=4.9357 loss_task=2.4679 aux_loss={'se_attn_lb': 4.298304080963135, 'se_ffn_compute': 0.7424567937850952, 'se_ffn_align': 0.05272308364510536, 'se_ffn_mod_lb': 2.2019834518432617}
+[train] step 600 task=vqa loss=6.0379 loss_task=3.0190 aux_loss={'se_attn_lb': 4.086513519287109, 'se_ffn_compute': 0.7525181174278259, 'se_ffn_align': 0.058214955031871796, 'se_ffn_mod_lb': 2.157334804534912}
+[train] step 700 task=vqa loss=4.2780 loss_task=2.1390 aux_loss={'se_attn_lb': 4.238102436065674, 'se_ffn_compute': 0.715327262878418, 'se_ffn_align': 0.05247611552476883, 'se_ffn_mod_lb': 2.180055856704712}
+[train] step 800 task=img_rec loss=0.1151 loss_task=0.1151 aux_loss={'se_attn_lb': 7.259176731109619, 'se_ffn_compute': 1.79164719581604, 'se_ffn_align': 0.2806582748889923, 'se_ffn_mod_lb': 1.3381826877593994}
+[train] step 900 task=txt_rec loss=0.6406 loss_task=0.6406 aux_loss={'se_attn_lb': 4.177855014801025, 'se_ffn_compute': 1.5618884563446045, 'se_ffn_align': 0.29113003611564636, 'se_ffn_mod_lb': 1.0855103731155396}
+Elapsed: 0h 39m 26s
+
+===== Epoch 7/25 =====
+[train] step 0 task=vqa loss=6.4576 loss_task=3.2288 aux_loss={'se_attn_lb': 4.0727386474609375, 'se_ffn_compute': 0.7592487335205078, 'se_ffn_align': 0.07078580558300018, 'se_ffn_mod_lb': 2.1824288368225098}
+[train] step 100 task=img_rec loss=0.1284 loss_task=0.1284 aux_loss={'se_attn_lb': 7.2147345542907715, 'se_ffn_compute': 1.8729249238967896, 'se_ffn_align': 0.30500465631484985, 'se_ffn_mod_lb': 1.3265718221664429}
+[train] step 200 task=vqa loss=5.1706 loss_task=2.5853 aux_loss={'se_attn_lb': 4.273571968078613, 'se_ffn_compute': 0.6958790421485901, 'se_ffn_align': 0.05392089858651161, 'se_ffn_mod_lb': 2.212584972381592}
+[train] step 300 task=vqa loss=6.1597 loss_task=3.0799 aux_loss={'se_attn_lb': 4.310621738433838, 'se_ffn_compute': 0.6632856130599976, 'se_ffn_align': 0.0565510056912899, 'se_ffn_mod_lb': 2.170311450958252}
+[train] step 400 task=vqa loss=6.4013 loss_task=3.2007 aux_loss={'se_attn_lb': 4.263124465942383, 'se_ffn_compute': 0.6577911376953125, 'se_ffn_align': 0.06841889023780823, 'se_ffn_mod_lb': 2.2004566192626953}
+[train] step 500 task=vqa loss=5.3292 loss_task=2.6646 aux_loss={'se_attn_lb': 4.302652835845947, 'se_ffn_compute': 0.6159266233444214, 'se_ffn_align': 0.06858942657709122, 'se_ffn_mod_lb': 2.1693575382232666}
+[train] step 600 task=vqa loss=4.6287 loss_task=2.3143 aux_loss={'se_attn_lb': 4.494886875152588, 'se_ffn_compute': 0.6916815042495728, 'se_ffn_align': 0.06778192520141602, 'se_ffn_mod_lb': 2.1950814723968506}
+[train] step 700 task=vqa loss=5.3404 loss_task=2.6702 aux_loss={'se_attn_lb': 4.636718273162842, 'se_ffn_compute': 0.677098274230957, 'se_ffn_align': 0.06106505170464516, 'se_ffn_mod_lb': 2.2263691425323486}
+[train] step 800 task=vqa loss=5.1890 loss_task=2.5945 aux_loss={'se_attn_lb': 4.610296726226807, 'se_ffn_compute': 0.6965954303741455, 'se_ffn_align': 0.08138611912727356, 'se_ffn_mod_lb': 2.217548131942749}
+[train] step 900 task=txt_rec loss=0.5703 loss_task=0.5703 aux_loss={'se_attn_lb': 4.314060211181641, 'se_ffn_compute': 1.489500641822815, 'se_ffn_align': 0.276192307472229, 'se_ffn_mod_lb': 1.0916470289230347}
+Elapsed: 0h 45m 53s
+
+===== Epoch 8/25 =====
+[train] step 0 task=vqa loss=5.5188 loss_task=2.7594 aux_loss={'se_attn_lb': 4.70720911026001, 'se_ffn_compute': 0.6565565466880798, 'se_ffn_align': 0.06851566582918167, 'se_ffn_mod_lb': 2.2432470321655273}
+[train] step 100 task=txt_rec loss=0.6066 loss_task=0.6066 aux_loss={'se_attn_lb': 4.435695171356201, 'se_ffn_compute': 1.5732594728469849, 'se_ffn_align': 0.28746309876441956, 'se_ffn_mod_lb': 1.061144232749939}
+[train] step 200 task=vqa loss=5.2154 loss_task=2.6077 aux_loss={'se_attn_lb': 4.4940056800842285, 'se_ffn_compute': 0.7111836075782776, 'se_ffn_align': 0.06291238963603973, 'se_ffn_mod_lb': 2.1891837120056152}
+[train] step 300 task=vqa loss=6.5405 loss_task=3.2702 aux_loss={'se_attn_lb': 4.566111087799072, 'se_ffn_compute': 0.790061891078949, 'se_ffn_align': 0.06084487959742546, 'se_ffn_mod_lb': 2.1945528984069824}
+[train] step 400 task=vqa loss=6.3098 loss_task=3.1549 aux_loss={'se_attn_lb': 4.454961776733398, 'se_ffn_compute': 0.8908026814460754, 'se_ffn_align': 0.07078950107097626, 'se_ffn_mod_lb': 2.197949171066284}
+[train] step 500 task=img_rec loss=0.1187 loss_task=0.1187 aux_loss={'se_attn_lb': 7.504726409912109, 'se_ffn_compute': 1.7939777374267578, 'se_ffn_align': 0.2759113907814026, 'se_ffn_mod_lb': 1.325547456741333}
+[train] step 600 task=txt_cls loss=0.4260 loss_task=0.4260 aux_loss={'se_attn_lb': 4.341341018676758, 'se_ffn_compute': 0.9374411702156067, 'se_ffn_align': 0.12418407201766968, 'se_ffn_mod_lb': 1.247011423110962}
+[train] step 700 task=vqa loss=6.3379 loss_task=3.1689 aux_loss={'se_attn_lb': 4.413739204406738, 'se_ffn_compute': 0.8037180304527283, 'se_ffn_align': 0.06003589928150177, 'se_ffn_mod_lb': 2.1686043739318848}
+[train] step 800 task=vqa loss=4.1689 loss_task=2.0845 aux_loss={'se_attn_lb': 4.467082977294922, 'se_ffn_compute': 0.7308701872825623, 'se_ffn_align': 0.0686548501253128, 'se_ffn_mod_lb': 2.174044132232666}
+[train] step 900 task=vqa loss=3.9237 loss_task=1.9618 aux_loss={'se_attn_lb': 4.417475700378418, 'se_ffn_compute': 0.7291362881660461, 'se_ffn_align': 0.07521684467792511, 'se_ffn_mod_lb': 2.195342540740967}
+Elapsed: 0h 52m 2s
+
+===== Epoch 9/25 =====
+[train] step 0 task=txt_rec loss=0.4948 loss_task=0.4948 aux_loss={'se_attn_lb': 4.469306945800781, 'se_ffn_compute': 1.393649935722351, 'se_ffn_align': 0.24371688067913055, 'se_ffn_mod_lb': 1.1003128290176392}
+[train] step 100 task=txt_rec loss=0.3533 loss_task=0.3533 aux_loss={'se_attn_lb': 4.190983772277832, 'se_ffn_compute': 1.485271692276001, 'se_ffn_align': 0.2696334421634674, 'se_ffn_mod_lb': 1.0723915100097656}
+[train] step 200 task=vqa loss=6.4170 loss_task=3.2085 aux_loss={'se_attn_lb': 4.332300662994385, 'se_ffn_compute': 0.7255825996398926, 'se_ffn_align': 0.08575613051652908, 'se_ffn_mod_lb': 2.2130043506622314}
+[train] step 300 task=vqa loss=7.5228 loss_task=3.7614 aux_loss={'se_attn_lb': 4.4754157066345215, 'se_ffn_compute': 0.7391130924224854, 'se_ffn_align': 0.08846525102853775, 'se_ffn_mod_lb': 2.1965279579162598}
+[train] step 400 task=vqa loss=5.5932 loss_task=2.7966 aux_loss={'se_attn_lb': 4.521921157836914, 'se_ffn_compute': 0.5536289215087891, 'se_ffn_align': 0.09726093709468842, 'se_ffn_mod_lb': 2.1939215660095215}
+[train] step 500 task=vqa loss=5.8698 loss_task=2.9349 aux_loss={'se_attn_lb': 4.471721172332764, 'se_ffn_compute': 0.6264019012451172, 'se_ffn_align': 0.08308771252632141, 'se_ffn_mod_lb': 2.216982126235962}
+[train] step 600 task=vqa loss=4.0365 loss_task=2.0182 aux_loss={'se_attn_lb': 4.596919059753418, 'se_ffn_compute': 0.5736890435218811, 'se_ffn_align': 0.08153587579727173, 'se_ffn_mod_lb': 2.2089157104492188}
+[train] step 700 task=vqa loss=5.6625 loss_task=2.8313 aux_loss={'se_attn_lb': 4.339654922485352, 'se_ffn_compute': 0.550382673740387, 'se_ffn_align': 0.09171298891305923, 'se_ffn_mod_lb': 2.1944310665130615}
+[train] step 800 task=vqa loss=5.6318 loss_task=2.8159 aux_loss={'se_attn_lb': 4.5142412185668945, 'se_ffn_compute': 0.6370753049850464, 'se_ffn_align': 0.09038309752941132, 'se_ffn_mod_lb': 2.2195136547088623}
+[train] step 900 task=vqa loss=5.6530 loss_task=2.8265 aux_loss={'se_attn_lb': 4.433765411376953, 'se_ffn_compute': 0.6709953546524048, 'se_ffn_align': 0.09630299359560013, 'se_ffn_mod_lb': 2.2074227333068848}
+Elapsed: 0h 58m 31s
+
+===== Epoch 10/25 =====
+[train] step 0 task=txt_rec loss=0.4552 loss_task=0.4552 aux_loss={'se_attn_lb': 4.497817039489746, 'se_ffn_compute': 1.4069626331329346, 'se_ffn_align': 0.26307398080825806, 'se_ffn_mod_lb': 1.1525099277496338}
+[train] step 100 task=img_rec loss=0.0977 loss_task=0.0977 aux_loss={'se_attn_lb': 7.509756565093994, 'se_ffn_compute': 1.588716745376587, 'se_ffn_align': 0.22305724024772644, 'se_ffn_mod_lb': 1.3331924676895142}
+[train] step 200 task=vqa loss=6.2345 loss_task=3.1173 aux_loss={'se_attn_lb': 4.5688982009887695, 'se_ffn_compute': 0.6312652230262756, 'se_ffn_align': 0.0977235808968544, 'se_ffn_mod_lb': 2.1873157024383545}
+[train] step 300 task=txt_rec loss=0.2823 loss_task=0.2823 aux_loss={'se_attn_lb': 4.618865966796875, 'se_ffn_compute': 1.6686866283416748, 'se_ffn_align': 0.3261492848396301, 'se_ffn_mod_lb': 1.113384485244751}
+[train] step 400 task=txt_rec loss=0.3428 loss_task=0.3428 aux_loss={'se_attn_lb': 4.5059733390808105, 'se_ffn_compute': 1.607842206954956, 'se_ffn_align': 0.3138681650161743, 'se_ffn_mod_lb': 1.1071170568466187}
+[train] step 500 task=vqa loss=4.7054 loss_task=2.3527 aux_loss={'se_attn_lb': 4.4690752029418945, 'se_ffn_compute': 0.6555138230323792, 'se_ffn_align': 0.10540276020765305, 'se_ffn_mod_lb': 2.2575535774230957}
+[train] step 600 task=img_cls loss=0.1267 loss_task=0.1267 aux_loss={'se_attn_lb': 3.234799861907959, 'se_ffn_compute': 1.0504672527313232, 'se_ffn_align': 0.12477274239063263, 'se_ffn_mod_lb': 1.0649703741073608}
+[train] step 700 task=vqa loss=5.5208 loss_task=2.7604 aux_loss={'se_attn_lb': 4.357222557067871, 'se_ffn_compute': 0.6575832366943359, 'se_ffn_align': 0.10110435634851456, 'se_ffn_mod_lb': 2.2110133171081543}
+[train] step 800 task=txt_rec loss=0.3078 loss_task=0.3078 aux_loss={'se_attn_lb': 4.280173301696777, 'se_ffn_compute': 1.4942188262939453, 'se_ffn_align': 0.2783467471599579, 'se_ffn_mod_lb': 1.1108139753341675}
+[train] step 900 task=vqa loss=3.6421 loss_task=1.8210 aux_loss={'se_attn_lb': 4.503224849700928, 'se_ffn_compute': 0.7134152054786682, 'se_ffn_align': 0.09144046157598495, 'se_ffn_mod_lb': 2.2716383934020996}
+Elapsed: 1h 4m 53s
+Eval results:
+  vqa: loss = 2.6496, task_loss = 2.6496, , acc=0.3744
+  img_rec: loss = 0.0998, task_loss = 0.0998, 
+  txt_cls: loss = 0.5752, task_loss = 0.5752, , acc=0.8431
+  txt_rec: loss = 0.6797, task_loss = 0.6797, 
+  img_cls: loss = 0.1518, task_loss = 0.1518, , acc=0.9581
+
+===== Epoch 11/25 =====
+[train] step 0 task=img_rec loss=0.1130 loss_task=0.1130 aux_loss={'se_attn_lb': 7.818317413330078, 'se_ffn_compute': 1.7004107236862183, 'se_ffn_align': 0.24897751212120056, 'se_ffn_mod_lb': 1.3342111110687256}
+[train] step 100 task=vqa loss=5.2197 loss_task=2.6098 aux_loss={'se_attn_lb': 4.242054462432861, 'se_ffn_compute': 0.6525920033454895, 'se_ffn_align': 0.10923060029745102, 'se_ffn_mod_lb': 2.208812952041626}
+[train] step 200 task=vqa loss=5.0722 loss_task=2.5361 aux_loss={'se_attn_lb': 4.338537693023682, 'se_ffn_compute': 0.6738587617874146, 'se_ffn_align': 0.0944608524441719, 'se_ffn_mod_lb': 2.192049264907837}
+[train] step 300 task=vqa loss=6.4987 loss_task=3.2493 aux_loss={'se_attn_lb': 4.347322463989258, 'se_ffn_compute': 0.6859838366508484, 'se_ffn_align': 0.10110999643802643, 'se_ffn_mod_lb': 2.2158055305480957}
+[train] step 400 task=vqa loss=5.0589 loss_task=2.5294 aux_loss={'se_attn_lb': 4.50996208190918, 'se_ffn_compute': 0.6337912082672119, 'se_ffn_align': 0.10312970727682114, 'se_ffn_mod_lb': 2.2530086040496826}
+[train] step 500 task=vqa loss=4.9366 loss_task=2.4683 aux_loss={'se_attn_lb': 4.428546905517578, 'se_ffn_compute': 0.6882455348968506, 'se_ffn_align': 0.10783015936613083, 'se_ffn_mod_lb': 2.204206705093384}
+[train] step 600 task=vqa loss=5.0217 loss_task=2.5108 aux_loss={'se_attn_lb': 4.214951515197754, 'se_ffn_compute': 0.6416904330253601, 'se_ffn_align': 0.120047926902771, 'se_ffn_mod_lb': 2.1976099014282227}
+[train] step 700 task=vqa loss=6.2807 loss_task=3.1404 aux_loss={'se_attn_lb': 4.159523010253906, 'se_ffn_compute': 0.6133142709732056, 'se_ffn_align': 0.10238732397556305, 'se_ffn_mod_lb': 2.171830415725708}
+[train] step 800 task=vqa loss=6.4350 loss_task=3.2175 aux_loss={'se_attn_lb': 4.354065895080566, 'se_ffn_compute': 0.7588700652122498, 'se_ffn_align': 0.11249695718288422, 'se_ffn_mod_lb': 2.192776679992676}
+[train] step 900 task=vqa loss=5.2784 loss_task=2.6392 aux_loss={'se_attn_lb': 4.133638858795166, 'se_ffn_compute': 0.8294556140899658, 'se_ffn_align': 0.08904081583023071, 'se_ffn_mod_lb': 2.158478260040283}
+Elapsed: 1h 12m 22s
+
+===== Epoch 12/25 =====
+[train] step 0 task=vqa loss=5.6298 loss_task=2.8149 aux_loss={'se_attn_lb': 4.280730247497559, 'se_ffn_compute': 0.7056506872177124, 'se_ffn_align': 0.11324039846658707, 'se_ffn_mod_lb': 2.180306911468506}
+[train] step 100 task=img_rec loss=0.1002 loss_task=0.1002 aux_loss={'se_attn_lb': 7.514901638031006, 'se_ffn_compute': 1.576662302017212, 'se_ffn_align': 0.22236651182174683, 'se_ffn_mod_lb': 1.3108839988708496}
+[train] step 200 task=vqa loss=4.9653 loss_task=2.4826 aux_loss={'se_attn_lb': 4.389948844909668, 'se_ffn_compute': 0.7835366725921631, 'se_ffn_align': 0.10532213747501373, 'se_ffn_mod_lb': 2.175305128097534}
+[train] step 300 task=vqa loss=5.1657 loss_task=2.5829 aux_loss={'se_attn_lb': 4.2599196434021, 'se_ffn_compute': 0.6404624581336975, 'se_ffn_align': 0.09932593256235123, 'se_ffn_mod_lb': 2.170590877532959}
+[train] step 400 task=vqa loss=6.3497 loss_task=3.1748 aux_loss={'se_attn_lb': 4.443890571594238, 'se_ffn_compute': 0.7020686864852905, 'se_ffn_align': 0.12352094054222107, 'se_ffn_mod_lb': 2.2016587257385254}
+[train] step 500 task=vqa loss=5.1716 loss_task=2.5858 aux_loss={'se_attn_lb': 4.2579498291015625, 'se_ffn_compute': 0.7738653421401978, 'se_ffn_align': 0.10400199145078659, 'se_ffn_mod_lb': 2.1562771797180176}
+[train] step 600 task=vqa loss=5.0448 loss_task=2.5224 aux_loss={'se_attn_lb': 4.385528564453125, 'se_ffn_compute': 0.6301671266555786, 'se_ffn_align': 0.11881664395332336, 'se_ffn_mod_lb': 2.200942277908325}
+[train] step 700 task=img_rec loss=0.0819 loss_task=0.0819 aux_loss={'se_attn_lb': 7.518499374389648, 'se_ffn_compute': 1.572411060333252, 'se_ffn_align': 0.2292128950357437, 'se_ffn_mod_lb': 1.3004149198532104}
+[train] step 800 task=vqa loss=6.5281 loss_task=3.2640 aux_loss={'se_attn_lb': 4.176952838897705, 'se_ffn_compute': 0.7414855360984802, 'se_ffn_align': 0.0967666506767273, 'se_ffn_mod_lb': 2.1745493412017822}
+[train] step 900 task=txt_rec loss=0.3122 loss_task=0.3122 aux_loss={'se_attn_lb': 4.711297035217285, 'se_ffn_compute': 1.4728091955184937, 'se_ffn_align': 0.27956530451774597, 'se_ffn_mod_lb': 1.1099804639816284}
+Elapsed: 1h 18m 44s
+
+===== Epoch 13/25 =====
+[train] step 0 task=vqa loss=2.9786 loss_task=1.4893 aux_loss={'se_attn_lb': 4.800343036651611, 'se_ffn_compute': 0.7828184366226196, 'se_ffn_align': 0.09544772654771805, 'se_ffn_mod_lb': 2.2475392818450928}
+[train] step 100 task=vqa loss=4.9168 loss_task=2.4584 aux_loss={'se_attn_lb': 4.39298677444458, 'se_ffn_compute': 0.6962018013000488, 'se_ffn_align': 0.10266554355621338, 'se_ffn_mod_lb': 2.175729274749756}
+[train] step 200 task=vqa loss=5.3880 loss_task=2.6940 aux_loss={'se_attn_lb': 4.288595199584961, 'se_ffn_compute': 0.736813485622406, 'se_ffn_align': 0.11297427117824554, 'se_ffn_mod_lb': 2.185825824737549}
+[train] step 300 task=vqa loss=5.3959 loss_task=2.6980 aux_loss={'se_attn_lb': 4.30890417098999, 'se_ffn_compute': 0.6424360871315002, 'se_ffn_align': 0.11686203628778458, 'se_ffn_mod_lb': 2.190272092819214}
+[train] step 400 task=vqa loss=5.1876 loss_task=2.5938 aux_loss={'se_attn_lb': 4.2745361328125, 'se_ffn_compute': 0.6100317239761353, 'se_ffn_align': 0.12179870903491974, 'se_ffn_mod_lb': 2.199467182159424}
+[train] step 500 task=vqa loss=4.4975 loss_task=2.2487 aux_loss={'se_attn_lb': 4.243159294128418, 'se_ffn_compute': 0.6475776433944702, 'se_ffn_align': 0.12192420661449432, 'se_ffn_mod_lb': 2.2023508548736572}
+[train] step 600 task=img_rec loss=0.0899 loss_task=0.0899 aux_loss={'se_attn_lb': 7.345307350158691, 'se_ffn_compute': 1.5463896989822388, 'se_ffn_align': 0.22320154309272766, 'se_ffn_mod_lb': 1.3104913234710693}
+[train] step 700 task=vqa loss=3.9880 loss_task=1.9940 aux_loss={'se_attn_lb': 4.3538031578063965, 'se_ffn_compute': 0.6170539259910583, 'se_ffn_align': 0.11599819362163544, 'se_ffn_mod_lb': 2.1937572956085205}
+[train] step 800 task=vqa loss=4.3196 loss_task=2.1598 aux_loss={'se_attn_lb': 4.230450630187988, 'se_ffn_compute': 0.6572014689445496, 'se_ffn_align': 0.10568838566541672, 'se_ffn_mod_lb': 2.1658101081848145}
+[train] step 900 task=vqa loss=4.4612 loss_task=2.2306 aux_loss={'se_attn_lb': 4.264485836029053, 'se_ffn_compute': 0.6375626921653748, 'se_ffn_align': 0.09539537131786346, 'se_ffn_mod_lb': 2.168274164199829}
+Elapsed: 1h 25m 14s
+
+===== Epoch 14/25 =====
+[train] step 0 task=vqa loss=4.9032 loss_task=2.4516 aux_loss={'se_attn_lb': 4.177781105041504, 'se_ffn_compute': 0.7454074025154114, 'se_ffn_align': 0.10612234473228455, 'se_ffn_mod_lb': 2.1823348999023438}
+[train] step 100 task=vqa loss=3.5106 loss_task=1.7553 aux_loss={'se_attn_lb': 4.341765403747559, 'se_ffn_compute': 0.7595699429512024, 'se_ffn_align': 0.10269711166620255, 'se_ffn_mod_lb': 2.1644694805145264}
+[train] step 200 task=vqa loss=5.0976 loss_task=2.5488 aux_loss={'se_attn_lb': 4.35035514831543, 'se_ffn_compute': 0.671470582485199, 'se_ffn_align': 0.10993625968694687, 'se_ffn_mod_lb': 2.199507474899292}
+[train] step 300 task=vqa loss=5.5657 loss_task=2.7829 aux_loss={'se_attn_lb': 4.404220104217529, 'se_ffn_compute': 0.701837420463562, 'se_ffn_align': 0.1189429834485054, 'se_ffn_mod_lb': 2.2008442878723145}
+[train] step 400 task=img_cls loss=0.0178 loss_task=0.0178 aux_loss={'se_attn_lb': 3.358530282974243, 'se_ffn_compute': 1.0925929546356201, 'se_ffn_align': 0.12213769555091858, 'se_ffn_mod_lb': 1.058206558227539}
+[train] step 500 task=vqa loss=4.8666 loss_task=2.4333 aux_loss={'se_attn_lb': 4.12968111038208, 'se_ffn_compute': 0.7537271976470947, 'se_ffn_align': 0.1092802956700325, 'se_ffn_mod_lb': 2.1423184871673584}
+[train] step 600 task=txt_cls loss=1.0630 loss_task=1.0630 aux_loss={'se_attn_lb': 3.825251579284668, 'se_ffn_compute': 1.1101466417312622, 'se_ffn_align': 0.17388254404067993, 'se_ffn_mod_lb': 1.1070116758346558}
+[train] step 700 task=txt_rec loss=0.1629 loss_task=0.1629 aux_loss={'se_attn_lb': 4.490959167480469, 'se_ffn_compute': 1.4381146430969238, 'se_ffn_align': 0.26899561285972595, 'se_ffn_mod_lb': 1.1108747720718384}
+[train] step 800 task=vqa loss=4.9391 loss_task=2.4695 aux_loss={'se_attn_lb': 4.260324954986572, 'se_ffn_compute': 0.7205603122711182, 'se_ffn_align': 0.12135573476552963, 'se_ffn_mod_lb': 2.2096641063690186}
+[train] step 900 task=vqa loss=3.8827 loss_task=1.9413 aux_loss={'se_attn_lb': 4.161355972290039, 'se_ffn_compute': 0.7948382496833801, 'se_ffn_align': 0.10955603420734406, 'se_ffn_mod_lb': 2.178256034851074}
+Elapsed: 1h 31m 37s
+
+===== Epoch 15/25 =====
+[train] step 0 task=img_cls loss=0.0699 loss_task=0.0699 aux_loss={'se_attn_lb': 3.577152729034424, 'se_ffn_compute': 1.193842887878418, 'se_ffn_align': 0.139420285820961, 'se_ffn_mod_lb': 1.0813463926315308}
+[train] step 100 task=img_rec loss=0.0797 loss_task=0.0797 aux_loss={'se_attn_lb': 7.341909408569336, 'se_ffn_compute': 1.4778035879135132, 'se_ffn_align': 0.2043098360300064, 'se_ffn_mod_lb': 1.314139723777771}
+[train] step 200 task=vqa loss=4.8146 loss_task=2.4073 aux_loss={'se_attn_lb': 4.284071922302246, 'se_ffn_compute': 0.7546672821044922, 'se_ffn_align': 0.13156317174434662, 'se_ffn_mod_lb': 2.1639466285705566}
+[train] step 300 task=vqa loss=4.8697 loss_task=2.4349 aux_loss={'se_attn_lb': 4.013011932373047, 'se_ffn_compute': 0.7299637794494629, 'se_ffn_align': 0.11761252582073212, 'se_ffn_mod_lb': 2.141160011291504}
+[train] step 400 task=vqa loss=3.1859 loss_task=1.5929 aux_loss={'se_attn_lb': 4.220332145690918, 'se_ffn_compute': 0.6636625528335571, 'se_ffn_align': 0.12293778359889984, 'se_ffn_mod_lb': 2.1673972606658936}
+[train] step 500 task=vqa loss=3.2703 loss_task=1.6351 aux_loss={'se_attn_lb': 4.269862174987793, 'se_ffn_compute': 0.6444113254547119, 'se_ffn_align': 0.1362142413854599, 'se_ffn_mod_lb': 2.165717363357544}
+[train] step 600 task=vqa loss=3.9491 loss_task=1.9746 aux_loss={'se_attn_lb': 4.232020378112793, 'se_ffn_compute': 0.6118761897087097, 'se_ffn_align': 0.12458259612321854, 'se_ffn_mod_lb': 2.1702733039855957}
+[train] step 700 task=vqa loss=3.6725 loss_task=1.8362 aux_loss={'se_attn_lb': 4.165427207946777, 'se_ffn_compute': 0.7457913756370544, 'se_ffn_align': 0.10367963463068008, 'se_ffn_mod_lb': 2.164172887802124}
+[train] step 800 task=txt_rec loss=0.1429 loss_task=0.1429 aux_loss={'se_attn_lb': 4.628262996673584, 'se_ffn_compute': 1.4298683404922485, 'se_ffn_align': 0.2714618444442749, 'se_ffn_mod_lb': 1.1250094175338745}
+[train] step 900 task=vqa loss=4.5465 loss_task=2.2732 aux_loss={'se_attn_lb': 4.2701544761657715, 'se_ffn_compute': 0.7564736604690552, 'se_ffn_align': 0.10597378015518188, 'se_ffn_mod_lb': 2.1748695373535156}
+Elapsed: 1h 37m 59s
+Eval results:
+  vqa: loss = 2.4566, task_loss = 2.4566, , acc=0.4016
+  img_rec: loss = 0.0741, task_loss = 0.0741, 
+  txt_rec: loss = 0.5604, task_loss = 0.5604, 
+  img_cls: loss = 0.1153, task_loss = 0.1153, , acc=0.9698
+  txt_cls: loss = 0.2569, task_loss = 0.2569, , acc=0.8778
+
+===== Epoch 16/25 =====
+[train] step 0 task=vqa loss=3.6603 loss_task=1.8301 aux_loss={'se_attn_lb': 4.25198221206665, 'se_ffn_compute': 0.7905962467193604, 'se_ffn_align': 0.11197146028280258, 'se_ffn_mod_lb': 2.1945157051086426}
+[train] step 100 task=img_rec loss=0.0769 loss_task=0.0769 aux_loss={'se_attn_lb': 7.4471282958984375, 'se_ffn_compute': 1.5494463443756104, 'se_ffn_align': 0.2171681970357895, 'se_ffn_mod_lb': 1.3185112476348877}
+[train] step 200 task=vqa loss=4.2037 loss_task=2.1018 aux_loss={'se_attn_lb': 4.188929557800293, 'se_ffn_compute': 0.7876765131950378, 'se_ffn_align': 0.1016269326210022, 'se_ffn_mod_lb': 2.1688225269317627}
+[train] step 300 task=vqa loss=5.9763 loss_task=2.9881 aux_loss={'se_attn_lb': 4.176825046539307, 'se_ffn_compute': 0.7527412176132202, 'se_ffn_align': 0.10921452194452286, 'se_ffn_mod_lb': 2.1593761444091797}
+[train] step 400 task=vqa loss=5.4169 loss_task=2.7084 aux_loss={'se_attn_lb': 4.120259761810303, 'se_ffn_compute': 0.8162315487861633, 'se_ffn_align': 0.11523433774709702, 'se_ffn_mod_lb': 2.1991231441497803}
+[train] step 500 task=txt_rec loss=0.2181 loss_task=0.2181 aux_loss={'se_attn_lb': 4.5105791091918945, 'se_ffn_compute': 1.4813086986541748, 'se_ffn_align': 0.2784886360168457, 'se_ffn_mod_lb': 1.074811577796936}
+[train] step 600 task=txt_rec loss=0.1810 loss_task=0.1810 aux_loss={'se_attn_lb': 4.5720343589782715, 'se_ffn_compute': 1.3458000421524048, 'se_ffn_align': 0.2477612942457199, 'se_ffn_mod_lb': 1.1173967123031616}
+[train] step 700 task=img_rec loss=0.0732 loss_task=0.0732 aux_loss={'se_attn_lb': 7.452550888061523, 'se_ffn_compute': 1.567378044128418, 'se_ffn_align': 0.22202464938163757, 'se_ffn_mod_lb': 1.3066301345825195}
+[train] step 800 task=vqa loss=3.7324 loss_task=1.8662 aux_loss={'se_attn_lb': 4.220503807067871, 'se_ffn_compute': 0.8945353031158447, 'se_ffn_align': 0.10181756317615509, 'se_ffn_mod_lb': 2.180162191390991}
+[train] step 900 task=vqa loss=3.7857 loss_task=1.8928 aux_loss={'se_attn_lb': 4.336254596710205, 'se_ffn_compute': 0.8045138120651245, 'se_ffn_align': 0.0988963320851326, 'se_ffn_mod_lb': 2.2011539936065674}
+Elapsed: 1h 45m 30s
+
+===== Epoch 17/25 =====
+[train] step 0 task=vqa loss=5.1400 loss_task=2.5700 aux_loss={'se_attn_lb': 4.219340801239014, 'se_ffn_compute': 0.7733116149902344, 'se_ffn_align': 0.10602542757987976, 'se_ffn_mod_lb': 2.1622958183288574}
+[train] step 100 task=vqa loss=5.6509 loss_task=2.8254 aux_loss={'se_attn_lb': 4.191502094268799, 'se_ffn_compute': 0.7955933213233948, 'se_ffn_align': 0.11097583919763565, 'se_ffn_mod_lb': 2.185474395751953}
+[train] step 200 task=vqa loss=4.7686 loss_task=2.3843 aux_loss={'se_attn_lb': 4.137674331665039, 'se_ffn_compute': 0.8444377779960632, 'se_ffn_align': 0.10199068486690521, 'se_ffn_mod_lb': 2.1638381481170654}
+[train] step 300 task=vqa loss=5.2261 loss_task=2.6130 aux_loss={'se_attn_lb': 4.094442367553711, 'se_ffn_compute': 0.7611250281333923, 'se_ffn_align': 0.10235840827226639, 'se_ffn_mod_lb': 2.15993332862854}
+[train] step 400 task=vqa loss=4.0101 loss_task=2.0050 aux_loss={'se_attn_lb': 4.1749444007873535, 'se_ffn_compute': 0.7999593615531921, 'se_ffn_align': 0.09890584647655487, 'se_ffn_mod_lb': 2.1663155555725098}
+[train] step 500 task=vqa loss=5.2721 loss_task=2.6360 aux_loss={'se_attn_lb': 4.195078372955322, 'se_ffn_compute': 0.7105574607849121, 'se_ffn_align': 0.09303275495767593, 'se_ffn_mod_lb': 2.1449990272521973}
+[train] step 600 task=vqa loss=3.7641 loss_task=1.8821 aux_loss={'se_attn_lb': 4.162212371826172, 'se_ffn_compute': 0.7719348073005676, 'se_ffn_align': 0.0887230932712555, 'se_ffn_mod_lb': 2.1513595581054688}
+[train] step 700 task=vqa loss=4.7187 loss_task=2.3593 aux_loss={'se_attn_lb': 4.09358024597168, 'se_ffn_compute': 0.8572831749916077, 'se_ffn_align': 0.08816882967948914, 'se_ffn_mod_lb': 2.1305153369903564}
+[train] step 800 task=vqa loss=4.4497 loss_task=2.2248 aux_loss={'se_attn_lb': 4.168872833251953, 'se_ffn_compute': 0.7290024161338806, 'se_ffn_align': 0.09814190864562988, 'se_ffn_mod_lb': 2.1454567909240723}
+[train] step 900 task=img_rec loss=0.0762 loss_task=0.0762 aux_loss={'se_attn_lb': 7.217833995819092, 'se_ffn_compute': 1.6032942533493042, 'se_ffn_align': 0.23217147588729858, 'se_ffn_mod_lb': 1.2820847034454346}
+Elapsed: 1h 51m 55s
+
+===== Epoch 18/25 =====
+[train] step 0 task=vqa loss=5.7753 loss_task=2.8876 aux_loss={'se_attn_lb': 4.2704691886901855, 'se_ffn_compute': 0.7523810267448425, 'se_ffn_align': 0.09954272210597992, 'se_ffn_mod_lb': 2.1793556213378906}
+[train] step 100 task=vqa loss=4.4635 loss_task=2.2317 aux_loss={'se_attn_lb': 4.072207927703857, 'se_ffn_compute': 0.7303853034973145, 'se_ffn_align': 0.0928911566734314, 'se_ffn_mod_lb': 2.1600301265716553}
+[train] step 200 task=vqa loss=4.6426 loss_task=2.3213 aux_loss={'se_attn_lb': 4.2303786277771, 'se_ffn_compute': 0.7532970905303955, 'se_ffn_align': 0.1068137139081955, 'se_ffn_mod_lb': 2.183049201965332}
+[train] step 300 task=img_rec loss=0.0724 loss_task=0.0724 aux_loss={'se_attn_lb': 7.292281627655029, 'se_ffn_compute': 1.5672580003738403, 'se_ffn_align': 0.22399654984474182, 'se_ffn_mod_lb': 1.2982604503631592}
+[train] step 400 task=txt_rec loss=0.1087 loss_task=0.1087 aux_loss={'se_attn_lb': 4.47451114654541, 'se_ffn_compute': 1.6195056438446045, 'se_ffn_align': 0.309214323759079, 'se_ffn_mod_lb': 1.0628515481948853}
+[train] step 500 task=vqa loss=4.7725 loss_task=2.3863 aux_loss={'se_attn_lb': 4.1436076164245605, 'se_ffn_compute': 0.8201817274093628, 'se_ffn_align': 0.1038205698132515, 'se_ffn_mod_lb': 2.159898281097412}
+[train] step 600 task=vqa loss=4.0423 loss_task=2.0211 aux_loss={'se_attn_lb': 4.16257381439209, 'se_ffn_compute': 0.8599688410758972, 'se_ffn_align': 0.09427649527788162, 'se_ffn_mod_lb': 2.1877291202545166}
+[train] step 700 task=vqa loss=4.2452 loss_task=2.1226 aux_loss={'se_attn_lb': 4.092436790466309, 'se_ffn_compute': 0.8545063138008118, 'se_ffn_align': 0.09427312016487122, 'se_ffn_mod_lb': 2.1642510890960693}
+[train] step 800 task=vqa loss=4.3417 loss_task=2.1708 aux_loss={'se_attn_lb': 4.165694713592529, 'se_ffn_compute': 0.8798863291740417, 'se_ffn_align': 0.0956946462392807, 'se_ffn_mod_lb': 2.182886838912964}
+[train] step 900 task=txt_cls loss=0.2852 loss_task=0.2852 aux_loss={'se_attn_lb': 3.6923537254333496, 'se_ffn_compute': 1.4021402597427368, 'se_ffn_align': 0.23729375004768372, 'se_ffn_mod_lb': 1.1194812059402466}
+Elapsed: 1h 58m 15s
+
+===== Epoch 19/25 =====
+[train] step 0 task=vqa loss=3.8462 loss_task=1.9231 aux_loss={'se_attn_lb': 4.201765537261963, 'se_ffn_compute': 0.8378662467002869, 'se_ffn_align': 0.09910442680120468, 'se_ffn_mod_lb': 2.152731418609619}
+[train] step 100 task=img_rec loss=0.0641 loss_task=0.0641 aux_loss={'se_attn_lb': 7.170810699462891, 'se_ffn_compute': 1.6060218811035156, 'se_ffn_align': 0.23118054866790771, 'se_ffn_mod_lb': 1.2997829914093018}
+[train] step 200 task=img_rec loss=0.0664 loss_task=0.0664 aux_loss={'se_attn_lb': 7.155028343200684, 'se_ffn_compute': 1.6142598390579224, 'se_ffn_align': 0.23617424070835114, 'se_ffn_mod_lb': 1.3007991313934326}
+[train] step 300 task=vqa loss=5.3560 loss_task=2.6780 aux_loss={'se_attn_lb': 3.98451828956604, 'se_ffn_compute': 0.8632041215896606, 'se_ffn_align': 0.11397602409124374, 'se_ffn_mod_lb': 2.194279909133911}
+[train] step 400 task=img_rec loss=0.0673 loss_task=0.0673 aux_loss={'se_attn_lb': 7.169308662414551, 'se_ffn_compute': 1.6108506917953491, 'se_ffn_align': 0.23363687098026276, 'se_ffn_mod_lb': 1.2961657047271729}
+[train] step 500 task=vqa loss=4.3785 loss_task=2.1892 aux_loss={'se_attn_lb': 4.157735347747803, 'se_ffn_compute': 0.8735693097114563, 'se_ffn_align': 0.10335132479667664, 'se_ffn_mod_lb': 2.1646692752838135}
+[train] step 600 task=vqa loss=3.3900 loss_task=1.6950 aux_loss={'se_attn_lb': 4.092289924621582, 'se_ffn_compute': 0.7937419414520264, 'se_ffn_align': 0.09906516224145889, 'se_ffn_mod_lb': 2.1815686225891113}
+[train] step 700 task=txt_rec loss=0.1086 loss_task=0.1086 aux_loss={'se_attn_lb': 4.441685676574707, 'se_ffn_compute': 1.3696705102920532, 'se_ffn_align': 0.2580728530883789, 'se_ffn_mod_lb': 1.1296874284744263}
+[train] step 800 task=vqa loss=4.2232 loss_task=2.1116 aux_loss={'se_attn_lb': 4.209127902984619, 'se_ffn_compute': 0.8499107956886292, 'se_ffn_align': 0.10471845418214798, 'se_ffn_mod_lb': 2.1867551803588867}
+[train] step 900 task=vqa loss=3.6250 loss_task=1.8125 aux_loss={'se_attn_lb': 4.073816299438477, 'se_ffn_compute': 0.8260624408721924, 'se_ffn_align': 0.1028735339641571, 'se_ffn_mod_lb': 2.1901659965515137}
+Elapsed: 2h 4m 36s
+
+===== Epoch 20/25 =====
+[train] step 0 task=vqa loss=5.2705 loss_task=2.6352 aux_loss={'se_attn_lb': 4.011773109436035, 'se_ffn_compute': 0.864188551902771, 'se_ffn_align': 0.10419735312461853, 'se_ffn_mod_lb': 2.157878875732422}
+[train] step 100 task=vqa loss=4.8191 loss_task=2.4096 aux_loss={'se_attn_lb': 4.114897727966309, 'se_ffn_compute': 0.8524451851844788, 'se_ffn_align': 0.1070096418261528, 'se_ffn_mod_lb': 2.223538398742676}
+[train] step 200 task=vqa loss=4.3534 loss_task=2.1767 aux_loss={'se_attn_lb': 4.102893829345703, 'se_ffn_compute': 0.8131284713745117, 'se_ffn_align': 0.0970708355307579, 'se_ffn_mod_lb': 2.181704521179199}
+[train] step 300 task=img_rec loss=0.0685 loss_task=0.0685 aux_loss={'se_attn_lb': 7.2132439613342285, 'se_ffn_compute': 1.652187466621399, 'se_ffn_align': 0.24178092181682587, 'se_ffn_mod_lb': 1.2968740463256836}
+[train] step 400 task=txt_rec loss=0.1556 loss_task=0.1556 aux_loss={'se_attn_lb': 4.5938639640808105, 'se_ffn_compute': 1.512215495109558, 'se_ffn_align': 0.2917960286140442, 'se_ffn_mod_lb': 1.0945686101913452}
+[train] step 500 task=txt_rec loss=0.1201 loss_task=0.1201 aux_loss={'se_attn_lb': 4.541601181030273, 'se_ffn_compute': 1.6375913619995117, 'se_ffn_align': 0.32349270582199097, 'se_ffn_mod_lb': 1.0738552808761597}
+[train] step 600 task=vqa loss=5.7037 loss_task=2.8519 aux_loss={'se_attn_lb': 3.98736834526062, 'se_ffn_compute': 0.8173699378967285, 'se_ffn_align': 0.10752865672111511, 'se_ffn_mod_lb': 2.174081325531006}
+[train] step 700 task=vqa loss=6.5378 loss_task=3.2689 aux_loss={'se_attn_lb': 3.9974122047424316, 'se_ffn_compute': 0.9328938126564026, 'se_ffn_align': 0.09912129491567612, 'se_ffn_mod_lb': 2.1942505836486816}
+[train] step 800 task=txt_cls loss=0.4264 loss_task=0.4264 aux_loss={'se_attn_lb': 3.5504729747772217, 'se_ffn_compute': 1.2769685983657837, 'se_ffn_align': 0.2236308604478836, 'se_ffn_mod_lb': 1.0850727558135986}
+[train] step 900 task=vqa loss=4.5978 loss_task=2.2989 aux_loss={'se_attn_lb': 4.080616474151611, 'se_ffn_compute': 0.8647863864898682, 'se_ffn_align': 0.08708206564188004, 'se_ffn_mod_lb': 2.172842264175415}
+Elapsed: 2h 10m 52s
+Eval results:
+  img_rec: loss = 0.0656, task_loss = 0.0656, 
+  img_cls: loss = 0.0989, task_loss = 0.0989, , acc=0.9718
+  txt_cls: loss = 0.2379, task_loss = 0.2379, , acc=0.8972
+  txt_rec: loss = 0.5042, task_loss = 0.5042, 
+  vqa: loss = 2.3648, task_loss = 2.3648, , acc=0.4254
+
+===== Epoch 21/25 =====
+[train] step 0 task=vqa loss=4.2018 loss_task=2.1009 aux_loss={'se_attn_lb': 4.158943176269531, 'se_ffn_compute': 0.8503401279449463, 'se_ffn_align': 0.09480611979961395, 'se_ffn_mod_lb': 2.1892991065979004}
+[train] step 100 task=img_rec loss=0.0660 loss_task=0.0660 aux_loss={'se_attn_lb': 7.252242088317871, 'se_ffn_compute': 1.660313367843628, 'se_ffn_align': 0.24438080191612244, 'se_ffn_mod_lb': 1.3031764030456543}
+[train] step 200 task=vqa loss=4.9545 loss_task=2.4772 aux_loss={'se_attn_lb': 4.0227837562561035, 'se_ffn_compute': 0.8457180857658386, 'se_ffn_align': 0.10018185526132584, 'se_ffn_mod_lb': 2.199594259262085}
+[train] step 300 task=img_rec loss=0.0662 loss_task=0.0662 aux_loss={'se_attn_lb': 7.080263137817383, 'se_ffn_compute': 1.674414873123169, 'se_ffn_align': 0.2487276792526245, 'se_ffn_mod_lb': 1.2896144390106201}
+[train] step 400 task=img_cls loss=0.0088 loss_task=0.0088 aux_loss={'se_attn_lb': 3.3702096939086914, 'se_ffn_compute': 1.1242488622665405, 'se_ffn_align': 0.12633810937404633, 'se_ffn_mod_lb': 1.063622236251831}
+[train] step 500 task=img_rec loss=0.0694 loss_task=0.0694 aux_loss={'se_attn_lb': 7.198342800140381, 'se_ffn_compute': 1.6597729921340942, 'se_ffn_align': 0.24547189474105835, 'se_ffn_mod_lb': 1.2996207475662231}
+[train] step 600 task=vqa loss=5.2540 loss_task=2.6270 aux_loss={'se_attn_lb': 4.105154514312744, 'se_ffn_compute': 0.8857660889625549, 'se_ffn_align': 0.09803040325641632, 'se_ffn_mod_lb': 2.213892936706543}
+[train] step 700 task=img_rec loss=0.0673 loss_task=0.0673 aux_loss={'se_attn_lb': 7.211051940917969, 'se_ffn_compute': 1.686618447303772, 'se_ffn_align': 0.24974894523620605, 'se_ffn_mod_lb': 1.2964845895767212}
+[train] step 800 task=img_rec loss=0.0622 loss_task=0.0622 aux_loss={'se_attn_lb': 7.275018215179443, 'se_ffn_compute': 1.6660308837890625, 'se_ffn_align': 0.24721643328666687, 'se_ffn_mod_lb': 1.3033196926116943}
+[train] step 900 task=vqa loss=3.4229 loss_task=1.7115 aux_loss={'se_attn_lb': 4.048691749572754, 'se_ffn_compute': 0.880459189414978, 'se_ffn_align': 0.09545595198869705, 'se_ffn_mod_lb': 2.212738513946533}
+Elapsed: 2h 18m 27s
+
+===== Epoch 22/25 =====
+[train] step 0 task=vqa loss=5.2921 loss_task=2.6460 aux_loss={'se_attn_lb': 3.9689371585845947, 'se_ffn_compute': 0.9164676070213318, 'se_ffn_align': 0.09237214922904968, 'se_ffn_mod_lb': 2.1963372230529785}
+[train] step 100 task=vqa loss=4.7031 loss_task=2.3515 aux_loss={'se_attn_lb': 4.041736602783203, 'se_ffn_compute': 0.8677210807800293, 'se_ffn_align': 0.09749741107225418, 'se_ffn_mod_lb': 2.1526780128479004}
+[train] step 200 task=img_rec loss=0.0677 loss_task=0.0677 aux_loss={'se_attn_lb': 7.223259925842285, 'se_ffn_compute': 1.670127272605896, 'se_ffn_align': 0.2476750612258911, 'se_ffn_mod_lb': 1.2984037399291992}
+[train] step 300 task=vqa loss=4.5831 loss_task=2.2916 aux_loss={'se_attn_lb': 4.055943965911865, 'se_ffn_compute': 0.9203122854232788, 'se_ffn_align': 0.0863429382443428, 'se_ffn_mod_lb': 2.16347074508667}
+[train] step 400 task=vqa loss=4.2701 loss_task=2.1350 aux_loss={'se_attn_lb': 4.028372764587402, 'se_ffn_compute': 0.9341400265693665, 'se_ffn_align': 0.09461940079927444, 'se_ffn_mod_lb': 2.2000977993011475}
+[train] step 500 task=txt_rec loss=0.0460 loss_task=0.0460 aux_loss={'se_attn_lb': 4.529477596282959, 'se_ffn_compute': 1.5204812288284302, 'se_ffn_align': 0.2947731614112854, 'se_ffn_mod_lb': 1.0920804738998413}
+[train] step 600 task=vqa loss=4.6513 loss_task=2.3257 aux_loss={'se_attn_lb': 4.021256446838379, 'se_ffn_compute': 0.9654489159584045, 'se_ffn_align': 0.09617215394973755, 'se_ffn_mod_lb': 2.233079195022583}
+[train] step 700 task=vqa loss=5.0330 loss_task=2.5165 aux_loss={'se_attn_lb': 4.0739665031433105, 'se_ffn_compute': 1.0390920639038086, 'se_ffn_align': 0.08466825634241104, 'se_ffn_mod_lb': 2.1673593521118164}
+[train] step 800 task=vqa loss=4.1569 loss_task=2.0784 aux_loss={'se_attn_lb': 3.9829163551330566, 'se_ffn_compute': 0.9684233665466309, 'se_ffn_align': 0.08195468038320541, 'se_ffn_mod_lb': 2.165078639984131}
+[train] step 900 task=vqa loss=4.7319 loss_task=2.3660 aux_loss={'se_attn_lb': 3.9536402225494385, 'se_ffn_compute': 0.9925087094306946, 'se_ffn_align': 0.09737895429134369, 'se_ffn_mod_lb': 2.2251977920532227}
+Elapsed: 2h 24m 56s
+
+===== Epoch 23/25 =====
+[train] step 0 task=vqa loss=4.9028 loss_task=2.4514 aux_loss={'se_attn_lb': 3.943708896636963, 'se_ffn_compute': 0.9567211866378784, 'se_ffn_align': 0.08492622524499893, 'se_ffn_mod_lb': 2.151444673538208}
+[train] step 100 task=txt_rec loss=0.0877 loss_task=0.0877 aux_loss={'se_attn_lb': 4.563442230224609, 'se_ffn_compute': 1.3190561532974243, 'se_ffn_align': 0.24748466908931732, 'se_ffn_mod_lb': 1.1381213665008545}
+[train] step 200 task=vqa loss=4.3755 loss_task=2.1877 aux_loss={'se_attn_lb': 3.901860237121582, 'se_ffn_compute': 1.0987855195999146, 'se_ffn_align': 0.09248767793178558, 'se_ffn_mod_lb': 2.1804039478302}
+[train] step 300 task=txt_rec loss=0.0558 loss_task=0.0558 aux_loss={'se_attn_lb': 4.550929546356201, 'se_ffn_compute': 1.4558244943618774, 'se_ffn_align': 0.2818148732185364, 'se_ffn_mod_lb': 1.115792989730835}
+[train] step 400 task=vqa loss=3.5299 loss_task=1.7649 aux_loss={'se_attn_lb': 3.9469127655029297, 'se_ffn_compute': 1.0093820095062256, 'se_ffn_align': 0.07892602682113647, 'se_ffn_mod_lb': 2.166788101196289}
+[train] step 500 task=vqa loss=4.2024 loss_task=2.1012 aux_loss={'se_attn_lb': 3.914767265319824, 'se_ffn_compute': 1.0385500192642212, 'se_ffn_align': 0.08589225262403488, 'se_ffn_mod_lb': 2.168262243270874}
+[train] step 600 task=txt_rec loss=0.1145 loss_task=0.1145 aux_loss={'se_attn_lb': 4.530170917510986, 'se_ffn_compute': 1.4314213991165161, 'se_ffn_align': 0.2745174169540405, 'se_ffn_mod_lb': 1.1071778535842896}
+[train] step 700 task=txt_rec loss=0.1418 loss_task=0.1418 aux_loss={'se_attn_lb': 4.52011775970459, 'se_ffn_compute': 1.5944664478302002, 'se_ffn_align': 0.31099069118499756, 'se_ffn_mod_lb': 1.076174020767212}
+[train] step 800 task=vqa loss=4.3590 loss_task=2.1795 aux_loss={'se_attn_lb': 3.8797850608825684, 'se_ffn_compute': 1.0614386796951294, 'se_ffn_align': 0.07921294867992401, 'se_ffn_mod_lb': 2.168562889099121}
+[train] step 900 task=vqa loss=3.8754 loss_task=1.9377 aux_loss={'se_attn_lb': 3.9275002479553223, 'se_ffn_compute': 1.094010353088379, 'se_ffn_align': 0.09751333296298981, 'se_ffn_mod_lb': 2.1861631870269775}
+Elapsed: 2h 31m 15s
+
+===== Epoch 24/25 =====
+[train] step 0 task=vqa loss=3.4758 loss_task=1.7379 aux_loss={'se_attn_lb': 3.942427635192871, 'se_ffn_compute': 0.9891175031661987, 'se_ffn_align': 0.0856347531080246, 'se_ffn_mod_lb': 2.188859224319458}
+[train] step 100 task=txt_rec loss=0.0586 loss_task=0.0586 aux_loss={'se_attn_lb': 4.548464775085449, 'se_ffn_compute': 1.4519809484481812, 'se_ffn_align': 0.2816224992275238, 'se_ffn_mod_lb': 1.1171334981918335}
+[train] step 200 task=vqa loss=4.5834 loss_task=2.2917 aux_loss={'se_attn_lb': 3.8467013835906982, 'se_ffn_compute': 1.0516139268875122, 'se_ffn_align': 0.083095483481884, 'se_ffn_mod_lb': 2.1782679557800293}
+[train] step 300 task=vqa loss=3.9392 loss_task=1.9696 aux_loss={'se_attn_lb': 4.023290157318115, 'se_ffn_compute': 0.9813119173049927, 'se_ffn_align': 0.08411558717489243, 'se_ffn_mod_lb': 2.189697742462158}
+[train] step 400 task=vqa loss=4.6225 loss_task=2.3112 aux_loss={'se_attn_lb': 3.8588058948516846, 'se_ffn_compute': 1.061694860458374, 'se_ffn_align': 0.08886002004146576, 'se_ffn_mod_lb': 2.1897430419921875}
+[train] step 500 task=img_cls loss=0.0013 loss_task=0.0013 aux_loss={'se_attn_lb': 3.2293145656585693, 'se_ffn_compute': 1.3587000370025635, 'se_ffn_align': 0.1793638914823532, 'se_ffn_mod_lb': 1.06494140625}
+[train] step 600 task=vqa loss=5.6604 loss_task=2.8302 aux_loss={'se_attn_lb': 3.879653215408325, 'se_ffn_compute': 1.0500307083129883, 'se_ffn_align': 0.09156320989131927, 'se_ffn_mod_lb': 2.1728549003601074}
+[train] step 700 task=vqa loss=4.1886 loss_task=2.0943 aux_loss={'se_attn_lb': 3.887946605682373, 'se_ffn_compute': 1.0213855504989624, 'se_ffn_align': 0.0911359190940857, 'se_ffn_mod_lb': 2.241313934326172}
+[train] step 800 task=vqa loss=3.8908 loss_task=1.9454 aux_loss={'se_attn_lb': 3.9084930419921875, 'se_ffn_compute': 1.03663969039917, 'se_ffn_align': 0.08585423231124878, 'se_ffn_mod_lb': 2.1664555072784424}
+[train] step 900 task=vqa loss=5.4854 loss_task=2.7427 aux_loss={'se_attn_lb': 3.934339761734009, 'se_ffn_compute': 1.02120840549469, 'se_ffn_align': 0.08539985865354538, 'se_ffn_mod_lb': 2.162475109100342}
+Elapsed: 2h 37m 35s
+
+===== Epoch 25/25 =====
+[train] step 0 task=vqa loss=4.2291 loss_task=2.1145 aux_loss={'se_attn_lb': 3.9657304286956787, 'se_ffn_compute': 1.0914725065231323, 'se_ffn_align': 0.09109381586313248, 'se_ffn_mod_lb': 2.185967445373535}
+[train] step 100 task=img_rec loss=0.0628 loss_task=0.0628 aux_loss={'se_attn_lb': 7.159928321838379, 'se_ffn_compute': 1.6861222982406616, 'se_ffn_align': 0.2532522976398468, 'se_ffn_mod_lb': 1.30754816532135}
+[train] step 200 task=vqa loss=4.0097 loss_task=2.0048 aux_loss={'se_attn_lb': 3.9256882667541504, 'se_ffn_compute': 1.0161428451538086, 'se_ffn_align': 0.08755987882614136, 'se_ffn_mod_lb': 2.1971991062164307}
+[train] step 300 task=img_rec loss=0.0603 loss_task=0.0603 aux_loss={'se_attn_lb': 7.230551719665527, 'se_ffn_compute': 1.6655133962631226, 'se_ffn_align': 0.24903976917266846, 'se_ffn_mod_lb': 1.304893970489502}
+[train] step 400 task=vqa loss=4.2302 loss_task=2.1151 aux_loss={'se_attn_lb': 3.8474433422088623, 'se_ffn_compute': 1.0290721654891968, 'se_ffn_align': 0.08489406108856201, 'se_ffn_mod_lb': 2.2131245136260986}
+[train] step 500 task=txt_rec loss=0.0855 loss_task=0.0855 aux_loss={'se_attn_lb': 4.565901279449463, 'se_ffn_compute': 1.4040980339050293, 'se_ffn_align': 0.27187395095825195, 'se_ffn_mod_lb': 1.1248631477355957}
+[train] step 600 task=txt_rec loss=0.1005 loss_task=0.1005 aux_loss={'se_attn_lb': 4.554330348968506, 'se_ffn_compute': 1.4872363805770874, 'se_ffn_align': 0.29067787528038025, 'se_ffn_mod_lb': 1.107135534286499}
+[train] step 700 task=vqa loss=3.5617 loss_task=1.7809 aux_loss={'se_attn_lb': 3.9442555904388428, 'se_ffn_compute': 1.0780469179153442, 'se_ffn_align': 0.08746718615293503, 'se_ffn_mod_lb': 2.158513069152832}
+[train] step 800 task=vqa loss=4.8900 loss_task=2.4450 aux_loss={'se_attn_lb': 3.883798837661743, 'se_ffn_compute': 1.0646511316299438, 'se_ffn_align': 0.08804731070995331, 'se_ffn_mod_lb': 2.199079751968384}
+[train] step 900 task=vqa loss=4.0052 loss_task=2.0026 aux_loss={'se_attn_lb': 3.8335747718811035, 'se_ffn_compute': 1.0481781959533691, 'se_ffn_align': 0.09850940108299255, 'se_ffn_mod_lb': 2.230093002319336}
+Elapsed: 2h 43m 54s
+Eval results:
+  img_cls: loss = 0.0923, task_loss = 0.0923, , acc=0.9739
+  img_rec: loss = 0.0621, task_loss = 0.0621, 
+  txt_rec: loss = 0.4892, task_loss = 0.4892, 
+  txt_cls: loss = 0.3332, task_loss = 0.3332, , acc=0.8909
+  vqa: loss = 2.3190, task_loss = 2.3190, , acc=0.4302

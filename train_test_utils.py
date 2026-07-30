@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-import torch
+import torch, torchvision
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -20,17 +20,11 @@ def train_step(
     optimizer: torch.optim.Optimizer,
     cfg: ModelConfig,
     device,
+    lr_scheduler = None,
 ) -> Dict[str, float]:
     
     model.train()
     optimizer.zero_grad(set_to_none=True)
-
-    # Move task_id to device and check it's single-task
-    task_id = batch["task_id"].to(device)  # (B,)
-
-    if not torch.all(task_id == task_id[0]):
-        raise ValueError("Mixed task_ids in a single batch are not supported.")
-    # tid = int(task_id[0].item())
 
     vision_tokens = batch.get("vision_tokens", None)
     text_tokens   = batch.get("text_tokens", None)
@@ -39,13 +33,13 @@ def train_step(
     out = model(
         vision_tokens=vision_tokens,
         text_tokens=text_tokens,
-        task_id=task_id,
-        # attn_mask=attn_mask,
+        speech_tokens=None,
+        task_name=task_name,
         attn_mask=None,
     )
 
     logits = out["logits"] 
-    aux_loss = out["aux_loss_attn_ffn"] 
+    aux_loss = out["aux_losses"] 
 
     # img_cls: standard classification loss
     if task_name == "img_cls":
@@ -58,9 +52,10 @@ def train_step(
     elif task_name == "img_rec":
         # logits: (B, 3, H, W) from ImageReconstructionHead
         recon = logits
+
         # target: same shape as recon
-        # adapt key name if your batch uses something else
         target = batch["labels"].to(device)
+
         loss_task = F.mse_loss(recon, target)
 
     # txt_cls: standard classification loss
@@ -77,7 +72,7 @@ def train_step(
         
         target_ids = batch["labels"].to(device)  # (B, L)
 
-        # ---- Align label length with model output length
+        # Align label length with model output length
         L_target = target_ids.size(1)
 
         if L_target == L_model + 1:
@@ -99,28 +94,32 @@ def train_step(
 
     # vqa_cls: answer classification
     elif task_name == "vqa":
-        # logits: (B, num_answers)
-        # labels: (B,) answer class indices
-        labels = batch["labels"].to(device)
-        loss_task = F.cross_entropy(logits, labels)
+        # labels = batch["scores"].to(device)
+        # loss_task = F.binary_cross_entropy_with_logits(logits, labels, reduction='mean')
 
-        # print('aux loss vqa:', aux_loss)
+        labels = batch["labels"].to(device)
+        loss_task = F.cross_entropy(logits, labels, ignore_index=0)
+
+        # preds_max = logits.argmax(dim=-1)
+        # targets_max = labels.argmax(dim=-1)
+        # accuracy = (preds_max == targets_max).float().mean().item()
 
     else:
         raise ValueError(f"Unexpected task_name {task_name} in training step.")
 
-    # ------ total loss
-    # dict keys: attn_mi, attn_lb, ffn_text, ffn_vision, ffn_speech
-    # loss = loss_task + cfg.attn_lb_weight * aux_loss["attn_lb"] + cfg.attn_mi_weight * aux_loss["attn_mi"] + cfg.ffn_lb_weight * (aux_loss.get("ffn_text", 0) + aux_loss.get("ffn_vision", 0) + aux_loss.get("ffn_speech", 0))
+    # loss = loss_task + cfg.attn_lb_weight*aux_loss.get("attn_lb", 0) + cfg.ffn_mod_lb_weight*aux_loss.get("ffn_mod_lb", 0) + cfg.ffn_compute_weight*aux_loss.get("ffn_compute", 0) + cfg.ffn_align_weight*aux_loss.get("ffn_align", 0) + cfg.shared_router_lb_weight*aux_loss.get("shared_router_lb", 0)
 
-    loss = loss_task + cfg.attn_lb_weight * aux_loss.get("attn_lb", 0) + cfg.ffn_mi_weight * aux_loss.get("ffn_mi", 0)
+    loss = loss_task + cfg.se_attn_lb_weight*aux_loss.get("se_attn_lb", 0) + cfg.se_ffn_mod_lb_weight*aux_loss.get("se_ffn_mod_lb", 0) + cfg.se_ffn_compute_weight*aux_loss.get("se_ffn_compute", 0) + cfg.se_ffn_align_weight*aux_loss.get("se_ffn_align", 0) + cfg.ce_router_lb_weight*aux_loss.get("ce_router_lb", 0)
+
 
     loss = final_loss_scaler(task_name, loss)
 
-    optimizer.zero_grad()
     loss.backward()
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
     optimizer.step()
+    lr_scheduler.step()
+
+    optimizer.zero_grad()
 
     aux_loss = {k: v.detach().cpu().item() for k, v in aux_loss.items()}
 
@@ -139,19 +138,17 @@ def eval_step(model, task_name, input_batch, cfg, device):
     out = model(
         vision_tokens=input_batch.get("vision_tokens", None),
         text_tokens=input_batch.get("text_tokens", None),
-        task_id=input_batch["task_id"],
+        speech_tokens=input_batch.get("speech_tokens", None),
+        task_name=task_name,
         attn_mask=input_batch.get("attn_mask", None),
     )
 
     logits = out["logits"]
-    aux_loss = out["aux_loss_attn_ffn"]
-
-    # task_id = input_batch["task_id"]
-    # tid = int(task_id[0].item())
+    aux_loss = out["aux_losses"]
 
     if task_name == "img_cls":
         labels = input_batch["labels"]
-        loss_task = F.cross_entropy(logits, labels)
+        loss_task = F.cross_entropy(logits, labels, ignore_index=0)
 
         # accuracy
         preds = logits.argmax(dim=-1)
@@ -166,7 +163,7 @@ def eval_step(model, task_name, input_batch, cfg, device):
 
     elif task_name == "txt_cls":
         labels = input_batch["labels"]
-        loss_task = F.cross_entropy(logits, labels)
+        loss_task = F.cross_entropy(logits, labels, ignore_index=0)
 
         preds = logits.argmax(dim=-1)
         correct = (preds == labels).sum().item()
@@ -194,7 +191,7 @@ def eval_step(model, task_name, input_batch, cfg, device):
         logits_flat  = logits_txt.reshape(-1, V)
         targets_flat = target_ids.reshape(-1)
 
-        ignore_index = -100  # or tokenizer.pad_token_id if your labels use pads
+        ignore_index = 0
 
         bad = (targets_flat < 0) | (targets_flat >= V)
         if bad.any():
@@ -209,27 +206,34 @@ def eval_step(model, task_name, input_batch, cfg, device):
         correct, total = 0, 0
 
     elif task_name == "vqa":
-        # logits: (B, num_answers)
-        # labels: (B,) answer class indices
         labels = input_batch["labels"].to(device)
-        loss_task = F.cross_entropy(logits, labels)
+        loss_task = F.cross_entropy(logits, labels, ignore_index=0)
 
         preds = logits.argmax(dim=-1)
         correct = (preds == labels).sum().item()
         total = labels.numel()
 
+        # labels = input_batch["scores"].to(device)
+        # loss_task = F.binary_cross_entropy_with_logits(logits, labels, reduction='mean')
+
+        # preds_max = logits.argmax(dim=-1)
+        # targets_max = labels.argmax(dim=-1)
+        # correct = (preds_max == targets_max).float().sum().item()
+        # total = labels.numel()  # or labels.size(0) for batch size
+
     else:
         raise ValueError(f"Unexpected task_name {task_name} in eval_step.")
 
-    # loss = loss_task + cfg.attn_lb_weight * aux_loss["attn_lb"] + cfg.attn_mi_weight * aux_loss["attn_mi"] + cfg.ffn_lb_weight * (aux_loss.get("ffn_text", 0) + aux_loss.get("ffn_vision", 0) + aux_loss.get("ffn_speech", 0))
 
-    loss = loss_task + cfg.attn_lb_weight * aux_loss.get("attn_lb", 0) + cfg.ffn_mi_weight * aux_loss.get("ffn_mi", 0)
+    # loss = loss_task + cfg.attn_lb_weight*aux_loss.get("attn_lb", 0) + cfg.ffn_mod_lb_weight*aux_loss.get("ffn_mod_lb", 0) + cfg.ffn_compute_weight*aux_loss.get("ffn_compute", 0) + cfg.ffn_align_weight*aux_loss.get("ffn_align", 0)
+
+    loss = loss_task + cfg.se_attn_lb_weight*aux_loss.get("se_attn_lb", 0) + cfg.se_ffn_mod_lb_weight*aux_loss.get("se_ffn_mod_lb", 0) + cfg.se_ffn_compute_weight*aux_loss.get("se_ffn_compute", 0) + cfg.se_ffn_align_weight*aux_loss.get("se_ffn_align", 0) + cfg.ce_router_lb_weight*aux_loss.get("ce_router_lb", 0)
 
     # aux_loss = {k: v.detach().cpu().item() for k, v in aux_loss.items()}
 
     return {
         "loss": float(loss.detach().cpu()),
-        # "loss_task": float(loss_task.detach().cpu()),
+        "loss_task": float(loss_task.detach().cpu()),
         # "loss_aux": aux_loss,
         "correct": correct,
         "total": total,
@@ -262,8 +266,7 @@ def eval_epoch(model, test_loaders, cfg, device, max_batches=None, eval_steps=10
             if task_name not in stats_agg:
                 stats_agg[task_name] = {
                     "loss_sum": 0.0,
-                    # "loss_task_sum": 0.0,
-                    # "aux_sum": 0.0,
+                    "loss_task_sum": 0.0,
                     "count": 0,
                     "correct": 0,
                     "total": 0,
@@ -271,8 +274,7 @@ def eval_epoch(model, test_loaders, cfg, device, max_batches=None, eval_steps=10
 
             s = stats_agg[task_name]
             s["loss_sum"]      += out_stats["loss"]
-            # s["loss_task_sum"] += out_stats["loss_task"]
-            # s["aux_sum"]       += out_stats["aux"]
+            s["loss_task_sum"] += out_stats["loss_task"]
             s["count"]         += 1
             s["correct"]       += out_stats["correct"]
             s["total"]         += out_stats["total"]
@@ -281,8 +283,7 @@ def eval_epoch(model, test_loaders, cfg, device, max_batches=None, eval_steps=10
     results = {}
     for task_name, s in stats_agg.items():
         avg_loss      = s["loss_sum"] / max(s["count"], 1)
-        # avg_loss_task = s["loss_task_sum"] / max(s["count"], 1)
-        # avg_aux       = s["aux_sum"] / max(s["count"], 1)
+        avg_loss_task = s["loss_task_sum"] / max(s["count"], 1)
         if s["total"] > 0:
             acc = s["correct"] / s["total"]
         else:
@@ -290,8 +291,7 @@ def eval_epoch(model, test_loaders, cfg, device, max_batches=None, eval_steps=10
 
         results[task_name] = {
             "loss": avg_loss,
-            # "loss_task": avg_loss_task,
-            # "aux": avg_aux,
+            "loss_task": avg_loss_task,
             "accuracy": acc,
         }
 

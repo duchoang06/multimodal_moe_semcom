@@ -59,23 +59,89 @@ def build_answer_vocab(train_annotations: List[dict], top_k: int) -> Tuple[Dict[
     id2ans = {i: ans for ans, i in ans2id.items()}
     return ans2id, id2ans, counter
 
+def answer_scores(answers: List[str], ans2id: Dict[str, int]) -> List[float]:
+    """
+    Convert the 10 VQAv2 answers into the soft target vector used by BCE.
+    """
+    scores = [0.0] * len(ans2id)
+    counts = Counter(normalize_answer(ans) for ans in answers)
+
+    for ans, occur in counts.items():
+        ans_id = ans2id.get(ans)
+        if ans_id is None:
+            continue
+
+        if occur == 0:
+            score = 0.0
+        elif occur == 1:
+            score = 0.3
+        elif occur == 2:
+            score = 0.6
+        elif occur == 3:
+            score = 0.9
+        else:
+            score = 1.0
+
+        scores[ans_id] = score
+
+    return scores
+
+# def build_samples_old(
+#     questions: List[dict],
+#     annotations: List[dict],
+#     ans2id: Dict[str, int],
+# ) -> List[dict]:
+#     """
+#     Build filtered sample list:
+#       {
+#         question_id,
+#         image_id,
+#         question,
+#         answer,
+#         answer_id
+#       }
+#     Keeps only samples whose majority answer is in ans2id.
+#     """
+#     qid2q = {q["question_id"]: q for q in questions}
+
+#     samples = []
+#     skipped_missing_question = 0
+#     skipped_oov_answer = 0
+
+#     for ann in annotations:
+#         qid = ann["question_id"]
+#         q = qid2q.get(qid)
+
+#         if q is None:
+#             skipped_missing_question += 1
+#             continue
+
+#         ans = majority_answer(ann)
+#         if ans not in ans2id:
+#             skipped_oov_answer += 1
+#             continue
+
+#         samples.append(
+#             {
+#                 "question_id": qid,
+#                 "image_id": q["image_id"],
+#                 "question": q["question"],
+#                 "answer": ans,
+#                 "answer_id": ans2id[ans],
+#             }
+#         )
+
+#     print(f"  built samples: {len(samples)}")
+#     print(f"  skipped (missing question): {skipped_missing_question}")
+#     print(f"  skipped (answer not in vocab): {skipped_oov_answer}")
+#     return samples
 
 def build_samples(
     questions: List[dict],
     annotations: List[dict],
     ans2id: Dict[str, int],
 ) -> List[dict]:
-    """
-    Build filtered sample list:
-      {
-        question_id,
-        image_id,
-        question,
-        answer,
-        answer_id
-      }
-    Keeps only samples whose majority answer is in ans2id.
-    """
+    
     qid2q = {q["question_id"]: q for q in questions}
 
     samples = []
@@ -90,6 +156,8 @@ def build_samples(
             skipped_missing_question += 1
             continue
 
+        normalized_answers = [normalize_answer(a["answer"]) for a in ann["answers"]]
+
         ans = majority_answer(ann)
         if ans not in ans2id:
             skipped_oov_answer += 1
@@ -101,7 +169,10 @@ def build_samples(
                 "image_id": q["image_id"],
                 "question": q["question"],
                 "answer": ans,
+                "answers": normalized_answers,
                 "answer_id": ans2id[ans],
+
+                # "answer_scores": answer_scores(normalized_answers, ans2id),
             }
         )
 
@@ -109,7 +180,6 @@ def build_samples(
     print(f"  skipped (missing question): {skipped_missing_question}")
     print(f"  skipped (answer not in vocab): {skipped_oov_answer}")
     return samples
-
 
 def verify_expected_files(root: str) -> None:
     required = [
