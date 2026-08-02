@@ -82,13 +82,12 @@ class SemanticEncoder(nn.Module):
             else:
                 raise ValueError(f"Unknown modality: {mod_name}")
 
-
         x = torch.cat(parts, dim=1)
         x = self.fusion_ln(x)
         T = x.size(1)
 
         pos_emb_tensor = torch.arange(T, device=device).unsqueeze(0).expand(B, T)
-        modality_ids = torch.zeros((B, T), device=device, dtype=torch.long) # 1 for vision, 0 for text
+        modality_ids = torch.zeros((B, T), device=device, dtype=torch.long) # 1 for text, 0 for vision
 
         for mod_name, mask in modality_masks_dict.items():
             mod_idx = self.cfg.active_modalities.index(mod_name)
@@ -99,17 +98,23 @@ class SemanticEncoder(nn.Module):
         ).view(1, 1, -1).expand(B, T, -1)  
 
         x = x + self.pos_emb(pos_emb_tensor) + self.modality_emb(modality_ids) + task_emb_tensor
+        # x = x + self.pos_emb(pos_emb_tensor) + self.modality_emb(modality_ids)
 
         # 3. Transformer Blocks
+        attn_mask = (1.0 - pad_mask) * torch.finfo(x.dtype).min
+        attn_mask = attn_mask.unsqueeze(1).unsqueeze(2)
+
         aux_loss_list = []        
         for blk in self.blocks:
-            x, aux_blk = blk(x, pad_mask, modality_masks_dict)
+            x, aux_blk = blk(x, pad_mask, modality_masks_dict, attn_mask)
             aux_loss_list.append(aux_blk)
 
         x = self.ln_f(x)
 
-        if 'cls' in task_name:
-            features = x[:, 0, :] 
+        if task_name in ['img_cls', 'txt_cls',]: # 'vqa'
+            features = x[:, 0, :]
+        elif task_name in ['vqa']:
+            features = x     
         else:
             features = x[:, 1:, :]
 
@@ -282,24 +287,24 @@ class MoAMoH_SemCom(nn.Module):
         task_idx = self.run_cfg.task_selection.index(task_name)
         task_emb = self.semantic_encoder.task_emb(torch.tensor([task_idx], device=device))
 
-        route_weights, expected_bw_cost = self.channel_router(
-            snr=self.run_cfg.snr_dB, 
-            task_emb=task_emb, 
-            temperature=temperature
-        )
-        aux_loss_dict['channel_encoder'] = {'router_lb': expected_bw_cost}
+        # route_weights, expected_bw_cost = self.channel_router(
+        #     snr=self.run_cfg.snr_dB, 
+        #     task_emb=task_emb, 
+        #     temperature=temperature
+        # )
+        # aux_loss_dict['channel_encoder'] = {'router_lb': expected_bw_cost}
 
         # 2. Variable-Dimension Channel Encoding (Adaptive SNR-Task Router)
         # We pass task_name and temperature to enable the differentiable HMoE
-        channel_encoded = self.channel_encoder(semantic_encoded, route_weights)
+        # channel_encoded = self.channel_encoder(semantic_encoded, route_weights)
         
         # 3. Analog Transmission
-        rx_signal = self.physical_channel(
-            channel_encoded, 
-            snr=self.run_cfg.snr_dB, 
-            fading=self.run_cfg.fading, 
-            rician_k=self.run_cfg.rician_k
-        )
+        # rx_signal = self.physical_channel(
+        #     channel_encoded, 
+        #     snr=self.run_cfg.snr_dB, 
+        #     fading=self.run_cfg.fading, 
+        #     rician_k=self.run_cfg.rician_k
+        # )
 
         # rx_signal = self.physical_channel(
         #     semantic_encoded, 
@@ -308,11 +313,13 @@ class MoAMoH_SemCom(nn.Module):
         #     rician_k=self.run_cfg.rician_k
         # )
 
-        channel_decoded = self.channel_decoder(rx_signal, route_weights)
+        # channel_decoded = self.channel_decoder(rx_signal, route_weights)
 
         # 5. Final Semantic Decoding
-        semantic_decoded = self.semantic_decoder(channel_decoded, task_name)
+        semantic_decoded = self.semantic_decoder(semantic_encoded, task_name)
         # semantic_decoded = self.semantic_decoder(rx_signal, task_name) # rx_signal
+        # semantic_decoded = self.semantic_decoder(channel_decoded, task_name)
+
 
         # this step should return single-level dict 
         parsed_loss = loss_parser(aux_loss_dict, device=device)

@@ -1,0 +1,73 @@
+nohup: ignoring input
+Process ID: 2990612
+--- Model Configuration:
+  d_model: 768
+  n_layers: 8
+  n_modalities: 2
+  active_modalities: ['text', 'vision']
+  task_output_dims: {'img_cls': 10, 'img_rec': None, 'txt_cls': 2, 'txt_rec': 30522, 'vqa': 3129}
+  n_tasks: 5
+  max_seq_len: 512
+  img_size: 224
+  patch_size: 16
+  attn_n_heads: 12
+  attn_head_dim: 64
+  attn_topk: 2
+  attn_shared_heads: 2
+  attn_router_dropout: 0.1
+  msoe_modality_blk_hidden: 1536
+  msoe_topk: 1
+  msoe_n_experts: 4
+  mtoe_expert_hidden: 3072
+  crossmodal_threshold: 0.5
+  dropout: 0.1
+  channel_hidden: 3072
+  transmit_dim: 192
+  se_attn_lb_weight: 1.0
+  se_ffn_mod_lb_weight: 1.0
+  se_ffn_compute_weight: 1.0
+  se_ffn_align_weight: 20.0
+  ce_router_lb_weight: 0.01
+  img_rec_loss_weight: 1.0
+  img_cls_loss_weight: 1.0
+  vqa_loss_weight: 1.0
+  txt_rec_loss_weight: 1.0
+  txt_cls_loss_weight: 1.0
+  spc_loss_weight: 1.0
+Run Configuration:
+  task_selection: ['img_rec', 'img_cls', 'vqa', 'txt_rec', 'txt_cls']
+  sample_task_probs: [0.15, 0.05, 0.6, 0.15, 0.05]
+  train_batch_size: 64
+  test_batch_size: 64
+  steps_per_epoch: 1000
+  eval_steps: 500
+  num_epochs: 25
+  vocab_size: 30522
+  snr_dB: 20.0
+  fading: none
+  rician_k: 3.0
+Loading weights:   0%|          | 0/200 [00:00<?, ?it/s]Loading weights: 100%|██████████| 200/200 [00:00<00:00, 18892.84it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 16604.00it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Trainable parameters: 287,525,494
+Total parameters: 454,422,646
+
+===== Epoch 1/25 =====
+[train] step 0 task=img_rec loss=12.6228 loss_task=0.5630 aux_loss={'se_attn_lb': 3.001906394958496, 'se_ffn_compute': 2.068020820617676, 'se_ffn_align': 0.28326451778411865, 'se_ffn_mod_lb': 1.3246618509292603}
+[train] step 100 task=vqa loss=25.9176 loss_task=6.1773 aux_loss={'se_attn_lb': 2.326565980911255, 'se_ffn_compute': 0.9479382038116455, 'se_ffn_align': 0.06838805973529816, 'se_ffn_mod_lb': 2.139277219772339}
+[train] step 200 task=txt_rec loss=13.0266 loss_task=9.6018 aux_loss={'se_attn_lb': 2.06402325630188, 'se_ffn_compute': 0.20982031524181366, 'se_ffn_align': 0.004995602183043957, 'se_ffn_mod_lb': 1.0510109663009644}
+[train] step 300 task=img_rec loss=3.3865 loss_task=0.3432 aux_loss={'se_attn_lb': 2.015040636062622, 'se_ffn_compute': 0.02363709546625614, 'se_ffn_align': 5.618186332867481e-05, 'se_ffn_mod_lb': 1.0035173892974854}
+[train] step 400 task=vqa loss=16.6950 loss_task=4.2967 aux_loss={'se_attn_lb': 2.0108017921447754, 'se_ffn_compute': 0.020176805555820465, 'se_ffn_align': 0.00013846223009750247, 'se_ffn_mod_lb': 2.0170249938964844}
+[train] step 500 task=txt_cls loss=3.8179 loss_task=0.7232 aux_loss={'se_attn_lb': 2.0528616905212402, 'se_ffn_compute': 0.01969839073717594, 'se_ffn_align': 0.00011797266051871702, 'se_ffn_mod_lb': 1.0197731256484985}

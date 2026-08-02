@@ -339,7 +339,7 @@ def loss_parser(losses, device):
     se_ffn_compute_loss = torch.tensor(0.0, device=device)
     se_ffn_align_loss = torch.tensor(0.0, device=device)
     se_ffn_mod_lb_loss = torch.tensor(0.0, device=device)
-    ce_router_lb_loss = torch.tensor(0.0, device=device)
+    ce_router_lb_loss = None
 
     # semantic encoder parsing
     semantic_encoder_loss = losses.get('semantic_encoder', None)
@@ -355,7 +355,8 @@ def loss_parser(losses, device):
 
     # channel encoder parsing
     channel_encoder_loss = losses.get('channel_encoder', None)
-    ce_router_lb_loss = channel_encoder_loss.get('router_lb', 0.0)
+    if channel_encoder_loss is not None:
+        ce_router_lb_loss = channel_encoder_loss.get('router_lb', 0.0)
 
 
     #single-level dict only 
@@ -364,8 +365,10 @@ def loss_parser(losses, device):
         'se_ffn_compute': se_ffn_compute_loss / num_blks_encoder,
         'se_ffn_align': se_ffn_align_loss / num_blks_encoder,
         'se_ffn_mod_lb': se_ffn_mod_lb_loss / num_blks_encoder,
-        'ce_router_lb': ce_router_lb_loss,
+        # 'ce_router_lb': ce_router_lb_loss,
     }
+    if ce_router_lb_loss is not None:
+        loss_dict['ce_router_lb'] = ce_router_lb_loss
     
     return loss_dict
 

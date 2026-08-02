@@ -124,13 +124,32 @@ if __name__ == "__main__":
 
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Trainable parameters: {trainable_params:,}")
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total parameters: {total_params:,}")
+
     
-    optimizer = torch.optim.AdamW(
-        model.parameters(), 
-        lr=2e-4,          # Peak learning rate
-        betas=(0.9, 0.95), # Crucial for from-scratch training
-        weight_decay=0.1
-    )    
+    decay = []
+    no_decay = []
+    for name, param in model.named_parameters():
+        if not param.requires_grad:
+            continue
+        # Do not decay biases, layernorms, or router networks
+        if any(nd in name for nd in ['bias', 'LayerNorm.weight', 'ln', 'router']):
+            no_decay.append(param)
+        else:
+            decay.append(param)
+
+    optimizer = torch.optim.AdamW([
+        {'params': decay, 'weight_decay': 0.1},
+        {'params': no_decay, 'weight_decay': 0.0}
+    ], lr=2e-4, betas=(0.9, 0.95))
+
+    # optimizer = torch.optim.AdamW(
+    #     model.parameters(), 
+    #     lr=2e-4,          # Peak learning rate
+    #     betas=(0.9, 0.95), # Crucial for from-scratch training
+    #     weight_decay=0.1
+    # )    
     num_epochs = run_cfg.num_epochs
     steps_per_epoch = run_cfg.steps_per_epoch
 
@@ -158,10 +177,15 @@ if __name__ == "__main__":
     eval_every = 5
     start_time = datetime.datetime.now()
 
+    start_temp = 5.0
+    end_temp = 0.1
+
     for epoch in range(num_epochs):
         print(f"\n===== Epoch {epoch+1}/{num_epochs} =====")
 
         model.train()
+        current_temp = start_temp * (end_temp / start_temp) ** (epoch / max(1, num_epochs - 1))
+
         for step in range(steps_per_epoch):
             task_name, batch = batcher.next()
             input_batch = batch_to_inputs(batch)
@@ -170,7 +194,7 @@ if __name__ == "__main__":
                 k: v.to(device, non_blocking=True) if torch.is_tensor(v) else v for k, v in input_batch.items()
             }
 
-            stats = train_step(model, task_name, input_batch, optimizer, cfg, device, scheduler)
+            stats = train_step(model, task_name, input_batch, optimizer, cfg, device, scheduler, current_temp)
 
             if step % log_every == 0:
                 print(
@@ -208,4 +232,4 @@ if __name__ == "__main__":
     # torch.save(model.state_dict(), f"./checkpoints/semcom_{timestamp}.pth")
 
 
-# nohup python -u main.py > ./log/semcom_fullmodel_20dB_$(date +%Y%m%d_%H%M%S).log 2>&1 & 
+# nohup python -u main.py > ./log/semcom_huge_update_withtask_$(date +%Y%m%d_%H%M%S).log 2>&1 & 
