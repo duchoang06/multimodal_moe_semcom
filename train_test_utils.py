@@ -21,6 +21,7 @@ def train_step(
     cfg: ModelConfig,
     device,
     lr_scheduler = None,
+    current_temperature = 1.0,
 ) -> Dict[str, float]:
     
     model.train()
@@ -36,6 +37,7 @@ def train_step(
         speech_tokens=None,
         task_name=task_name,
         attn_mask=None,
+        temperature=current_temperature,
     )
 
     logits = out["logits"] 

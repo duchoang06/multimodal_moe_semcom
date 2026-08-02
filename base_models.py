@@ -15,24 +15,47 @@ class TextEmbedder(nn.Module):
     def __init__(self, output_dim=768, bert_model_name='bert-base-uncased'):
         super().__init__()
         self.bert_model = BertModel.from_pretrained(bert_model_name)
-        for param in self.bert_model.parameters():
-            param.requires_grad = False
+
+        # for param in self.bert_model.parameters():
+        #     param.requires_grad = False
+
+        for name, param in self.bert_model.named_parameters():
+            # Unfreeze the last 2 layers and the pooler
+            if "encoder.layer.10" in name or "encoder.layer.11" in name or "pooler" in name:
+            # if any(f"encoder.layer.{i}." in name for i in range(8, 12)) or "pooler" in name:
+                param.requires_grad = True
+            else:
+                param.requires_grad = False
+
         self.tokenizer = BertTokenizer.from_pretrained(bert_model_name)
         self.projection = nn.Linear(self.bert_model.config.hidden_size, output_dim)
 
     def forward(self, text_list, task_name=None):
         device = next(self.parameters()).device
-        with torch.no_grad():
-            outputs = self.bert_model(text_list)
-        return self.projection(outputs.last_hidden_state)
+        # with torch.no_grad():
+        outputs = self.bert_model(text_list)
+
+        projected = self.projection(outputs.last_hidden_state)
+
+        return projected
 
 class VisionEmbedder(nn.Module):
     def __init__(self, output_dim=768, vit_model_name="google/vit-base-patch16-224-in21k"):
         super().__init__()
         self.vit_model = ViTModel.from_pretrained(vit_model_name)
         self.processor = ViTImageProcessor.from_pretrained(vit_model_name)
-        for p in self.vit_model.parameters():
-            p.requires_grad = False
+
+        # for p in self.vit_model.parameters():
+        #     p.requires_grad = False
+
+        for name, param in self.vit_model.named_parameters():
+            # Unfreeze the last 2 layers and layernorms
+            if "encoder.layer.10" in name or "encoder.layer.11" in name or "layernorm" in name:
+            # if any(f"encoder.layer.{i}." in name for i in range(8, 12)) or "layernorm" in name:
+                param.requires_grad = True
+            else:
+                param.requires_grad = False
+
         self.projection = nn.Linear(self.vit_model.config.hidden_size, output_dim)
 
     def forward(self, images, task_name=None):
@@ -45,12 +68,12 @@ class VisionEmbedder(nn.Module):
         else:
             raise TypeError("Images must be list of PIL or Tensor.")
 
-        with torch.no_grad():
-            outputs = self.vit_model(pixel_values=pixel_values)
+        # with torch.no_grad():
+        outputs = self.vit_model(pixel_values=pixel_values)
 
         projected = self.projection(outputs.last_hidden_state)
 
-        if task_name != None and 'vqa' in task_name:
+        if 'vqa' in task_name:
             return projected[:, 1: , :]
         else:
             return projected
@@ -137,16 +160,16 @@ class TextReconstructionHead(nn.Module):
         """
         return self.proj(token_features)
     
-class VQAHead(nn.Module):
+class VQAHead_cls_token(nn.Module):
     def __init__(self, d_model: int, num_answers: int):
         super().__init__()
         # self.proj = nn.Linear(d_model, num_answers)
 
         self.proj = nn.Sequential(
-            nn.Linear(d_model, d_model),
+            nn.Linear(d_model, d_model*2),
             nn.GELU(),
-            nn.LayerNorm(d_model),
-            nn.Linear(d_model, num_answers),
+            nn.LayerNorm(d_model*2),
+            nn.Linear(d_model*2, num_answers),
         )
 
     def forward(self, token_features: torch.Tensor) -> torch.Tensor:
@@ -156,8 +179,38 @@ class VQAHead(nn.Module):
         """
         # Simple approach: mean pool over all tokens and project to answers
         #to-do: try other pooling strats
-        pooled = token_features.mean(dim=1)  # (B, D)
-        return self.proj(pooled)             # (B, num_answers)
+        # pooled = token_features.mean(dim=1)  # (B, D)
+        return self.proj(token_features)             # (B, num_answers)
+
+class VQAHead(nn.Module):
+    def __init__(self, d_model: int, num_answers: int):
+        super().__init__()
+        
+        # --- NEW: Attention Pooling Layer ---
+        self.attn_pool = nn.Linear(d_model, 1) 
+        
+        self.proj = nn.Sequential(
+            nn.Linear(d_model, d_model * 2),
+            nn.GELU(),
+            nn.LayerNorm(d_model * 2),
+            nn.Linear(d_model * 2, num_answers),
+        )
+
+    def forward(self, token_features: torch.Tensor) -> torch.Tensor:
+        """
+        token_features: (B, L, D) -- The full sequence of decoded tokens
+        """
+        # 1. Calculate the importance (weight) of each token in the sequence
+        # attn_weights shape: (B, L, 1)
+        attn_weights = F.softmax(self.attn_pool(token_features), dim=1) 
+        
+        # 2. Weighted sum of the sequence (Attention Pooling)
+        # This dynamically extracts the most important vision/text tokens!
+        pooled = (token_features * attn_weights).sum(dim=1)  # (B, D)
+        
+        # 3. Project to answer vocabulary
+        return self.proj(pooled)
+
 
 # ----------------------------
 # Mixture-of-Head Attention (MoH)
@@ -179,9 +232,9 @@ class MoHAttention(nn.Module):
 
     def forward(
             self, x: torch.Tensor,
-            attn_mask: Optional[torch.Tensor] = None,
             pad_mask: Optional[torch.Tensor] = None,
             modality_ids: Optional[torch.Tensor] = None,
+            attn_mask: Optional[torch.Tensor] = None,
     ):
         
         B, T, D = x.shape
@@ -398,7 +451,7 @@ class Block(nn.Module):
         self.ffn = MoEFFN(cfg)
         self.drop2 = nn.Dropout(cfg.dropout)
 
-    def forward(self, x, pad_mask, modality_masks_dict):
+    def forward(self, x, pad_mask, modality_masks_dict, attn_mask=None):
         # vision = 0, text = 1, etc.
         B, T, D = x.shape
         mod_ids = torch.full((B, T), -1, device=x.device, dtype=torch.long)
@@ -406,7 +459,7 @@ class Block(nn.Module):
             mod_ids[mask] = i
 
         # 1. Attention
-        a, attn_loss, avg_attn_matrix = self.attn(self.ln1(x), pad_mask=pad_mask, modality_ids=mod_ids)
+        a, attn_loss, avg_attn_matrix = self.attn(self.ln1(x), pad_mask=pad_mask, modality_ids=mod_ids, attn_mask=attn_mask)
         x = x + self.drop1(a)
         
         # Calculate A_{i -> cross}
@@ -547,7 +600,7 @@ class MultiModalMultiTaskMoHMoE(nn.Module):
         head = self.task_heads[task_name]
         
         # Determine if task requires pooling (just task token) or full sequence, eg: classification uses task token (x[:, 0, :]), Reconstruction uses data (x[:, 1:, :])
-        if "cls" in task_name:
+        if "cls" in task_name or 'vqa' in task_name:
             features = x[:, 0, :]
         else:
             features = x[:, 1:, :]
@@ -562,14 +615,15 @@ class SharedSNRTaskRouter(nn.Module):
     def __init__(self, cfg):
         super().__init__()
         self.num_experts = getattr(cfg, 'num_channel_experts', 4)
+        self.d_model = cfg.d_model
         
         # The output dimensions (analog symbols) of each expert level
         # e.g., [128, 256, 512, 1024]
         self.expert_dims = torch.tensor([
-            cfg.d_model // 4,  
-            cfg.d_model // 2,  
-            cfg.d_model,       
-            cfg.d_model * 2    
+            self.d_model // 8,  
+            self.d_model // 6,  
+            self.d_model // 4,  
+            self.d_model // 2,   
         ], dtype=torch.float32)
         
         self.router_mlp = nn.Sequential(

@@ -33,7 +33,7 @@ class ModelConfig:
     d_model: int = 768
     n_layers: int = 8
     n_modalities: int = 2
-    active_modalities: list = field(default_factory=lambda: ['vision', 'text']) # modality indexes do matter here
+    active_modalities: list = field(default_factory=lambda: ['text', 'vision']) # modality indexes do matter here
 
     task_output_dims: dict[str, int] = field(default_factory=lambda: {
         'img_cls': 10,  # img_cls
@@ -83,7 +83,7 @@ class ModelConfig:
     se_attn_lb_weight: float = 1.0 # set to 0.0 to remove from total loss
     se_ffn_mod_lb_weight: float = 1.0
     se_ffn_compute_weight: float = 1.0
-    se_ffn_align_weight: float = 50.0
+    se_ffn_align_weight: float = 20.0
 
     ce_router_lb_weight : float = 1e-2
 
